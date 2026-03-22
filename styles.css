@@ -1,0 +1,282 @@
+:root {
+    --bg-page: #F4F5F8; /* Soft slate gray background */
+    --bg-surface: #FFFFFF; /* Pure white cards */
+    --color-text-primary: #0A142F; /* Deep navy/black for high readability */
+    --color-text-secondary: #64748B; /* Muted text for labels */
+    --color-border: #E2E8F0; /* Subtle borders */
+    
+    /* Functional Colors */
+    --color-income: #10B981; /* Emerald green */
+    --color-expense: #EF4444; /* Crisp red */
+    --color-brand-primary: #002D40; /* Expensify-like deep corporate blue */
+    --color-brand-button: #10B981;
+    --color-brand-button-hover: #059669;
+
+    /* Metrics */
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+}
+
+/* Global Reset & Typography */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-page);
+    color: var(--color-text-primary);
+    line-height: 1.5;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    -webkit-font-smoothing: antialiased; /* Mac par text crisp dikhne ke liye */
+}
+
+/* Dashboard Container: Card-based UI jo screen ke center me rahega */
+.dashboardContainer {
+    background-color: var(--bg-surface);
+    width: 100%;
+    max-width: 480px; /* Thoda wide kiya hai taaki form fields ko space mile */
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: 32px 24px;
+}
+
+/* Header */
+.dashboardHeader {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.brandTitle {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-brand-primary);
+    letter-spacing: -0.5px;
+}
+
+.brandAccent {
+    color: var(--color-brand-button);
+}
+
+.brandSubtitle {
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+/* Master Balance */
+.masterBalanceSection {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.balanceLabel {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-secondary);
+    margin-bottom: 8px;
+}
+
+.balanceAmount {
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+}
+
+/* Financial Metrics Grid: CSS Grid ka use karke equal width cards banaye hain */
+.financialMetricsGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.metricCard {
+    background-color: var(--bg-page);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.metricIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.incomeCard .metricIcon {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: var(--color-income);
+}
+
+.expenseCard .metricIcon {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--color-expense);
+}
+
+.metricLabel {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.metricAmount {
+    font-size: 1.125rem;
+    font-weight: 700;
+}
+
+.incomeAmount { color: var(--color-income); }
+.expenseAmount { color: var(--color-expense); }
+
+/* Forms & Inputs: Enterprise style floating-like labels and crisp inputs */
+.sectionTitle {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--color-brand-primary);
+}
+
+.transactionEntrySection {
+    margin-bottom: 32px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.inputWrapper {
+    margin-bottom: 16px;
+}
+
+.inputLabel {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: var(--color-text-primary);
+}
+
+.labelHint {
+    color: var(--color-text-secondary);
+    font-size: 0.75rem;
+    font-weight: 400;
+}
+
+.cleanInput {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.2s ease;
+    background-color: var(--bg-surface);
+}
+
+/* Focus state: accessibility aur UX ke liye highlight karna zaroori hai */
+.cleanInput:focus {
+    outline: none;
+    border-color: var(--color-brand-button);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+/* Primary Action Button */
+.actionButtonPrimary {
+    width: 100%;
+    background-color: var(--color-brand-button);
+    color: white;
+    border: none;
+    padding: 14px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    margin-top: 8px;
+}
+
+.actionButtonPrimary:hover {
+    background-color: var(--color-brand-button-hover);
+}
+
+.actionButtonPrimary:active {
+    transform: scale(0.98); /* Click par slight press effect */
+}
+
+/* Ledger / History Section */
+.sectionHeaderWithAction {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.textButtonSecondary {
+    background: none;
+    border: none;
+    color: var(--color-brand-button);
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+
+.textButtonSecondary:hover {
+    text-decoration: underline;
+}
+
+.ledgerList {
+    list-style: none;
+}
+
+.ledgerItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.ledgerItem:last-child {
+    border-bottom: none;
+}
+
+.ledgerItemDetails {
+    display: flex;
+    flex-direction: column;
+}
+
+.ledgerItemDesc {
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.ledgerItemDate {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    margin-top: 2px;
+}
+
+.ledgerItemValue {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* Classes to be injected by JS later */
+.ledgerItem.incomeItem .ledgerItemValue { color: var(--color-income); }
+.ledgerItem.expenseItem .ledgerItemValue { color: var(--color-expense); }

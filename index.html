@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Expense Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main class="dashboardContainer">
+        
+        <header class="dashboardHeader">
+            <h1 class="brandTitle">Tracker<span class="brandAccent">Pro</span></h1>
+            <p class="brandSubtitle">Financial Overview</p>
+        </header>
+
+        <section class="masterBalanceSection">
+            <h2 class="balanceLabel">Total Balance</h2>
+            <h1 class="balanceAmount" id="displayMasterBalance">$0.00</h1>
+        </section>
+
+        <section class="financialMetricsGrid">
+            <div class="metricCard incomeCard">
+                <span class="metricIcon">↓</span>
+                <div class="metricData">
+                    <p class="metricLabel">Income</p>
+                    <p class="metricAmount incomeAmount" id="displayTotalIncome">+$0.00</p>
+                </div>
+            </div>
+            <div class="metricCard expenseCard">
+                <span class="metricIcon">↑</span>
+                <div class="metricData">
+                    <p class="metricLabel">Expense</p>
+                    <p class="metricAmount expenseAmount" id="displayTotalExpense">-$0.00</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="transactionEntrySection">
+            <h3 class="sectionTitle">Record Transaction</h3>
+            
+            <form id="financialEntryForm" class="entryForm">
+                <div class="inputWrapper">
+                    <label for="inputTransactionDesc" class="inputLabel">Description</label>
+                    <input type="text" id="inputTransactionDesc" class="cleanInput" placeholder="e.g., Client Dinner, AWS Hosting" autocomplete="off" required>
+                </div>
+                
+                <div class="inputWrapper">
+                    <label for="inputTransactionAmt" class="inputLabel">Amount <span class="labelHint">(Use '-' for expenses)</span></label>
+                    <input type="number" id="inputTransactionAmt" class="cleanInput" placeholder="e.g., -150.00" step="0.01" required>
+                </div>
+                
+                <button type="submit" class="actionButtonPrimary">Save Transaction</button>
+            </form>
+        </section>
+
+        <section class="transactionLedgerSection">
+            <div class="sectionHeaderWithAction">
+                <h3 class="sectionTitle">Recent Activity</h3>
+                <button class="textButtonSecondary" id="btnExportData">Export</button>
+            </div>
+            
+            <ul class="ledgerList" id="transactionLedgerList">
+                </ul>
+        </section>
+
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
