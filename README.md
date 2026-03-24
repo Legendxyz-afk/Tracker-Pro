@@ -1,2 +1,2 @@
 # Expense-Tracker
-College project
+this is a college project

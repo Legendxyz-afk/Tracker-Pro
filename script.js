@@ -5,6 +5,12 @@ const transactionLedgerList = document.getElementById('transactionLedgerList');
 const financialEntryForm = document.getElementById('financialEntryForm');
 const inputTransactionDesc = document.getElementById('inputTransactionDesc');
 const inputTransactionAmt = document.getElementById('inputTransactionAmt');
+const landingViewWrapper = document.getElementById('landingViewWrapper');
+const marketingSiteWrapper = document.getElementById('marketingSiteWrapper');
+const appDashboardWrapper = document.getElementById('appDashboardWrapper');
+const buttonLaunchDashboard = document.getElementById('buttonLaunchDashboard');
+const navLaunchDashboard = document.getElementById('navLaunchDashboard'); 
+const buttonCloseDashboard = document.getElementById('buttonCloseDashboard');
 
 /* ==========================================
    STATE MANAGEMENT (Single Source of Truth)
@@ -16,7 +22,58 @@ let globalTransactionsArray = [];
 /* ==========================================
    CORE LOGIC & ALGORITHMS
    ========================================== */
+function openDashboardView() {
+    // 1. Poori marketing site ko hide karo
+    marketingSiteWrapper.classList.add('hiddenView');
+    
+    // 2. Dashboard ko show karo
+    appDashboardWrapper.classList.remove('hiddenView');
+    appDashboardWrapper.classList.add('fadeAndSlideIn');
+    
+    // UX Polish: Jab dashboard khule toh page ke top par scroll kar do
+    window.scrollTo(0, 0);
 
+    console.log("[System] Routed to Dashboard SPA.");
+}
+
+function closeDashboardView() {
+    appDashboardWrapper.classList.add('hiddenView');
+    appDashboardWrapper.classList.remove('fadeAndSlideIn');
+    
+    marketingSiteWrapper.classList.remove('hiddenView');
+    marketingSiteWrapper.classList.add('fadeAndSlideIn');
+    
+    // Wapas aane par top par scroll karna achha practice hai
+    window.scrollTo(0, 0);
+
+    console.log("[System] Routed to Marketing Site.");
+}
+
+/* Event Listeners for Navigation */
+buttonLaunchDashboard.addEventListener('click', openDashboardView);
+navLaunchDashboard.addEventListener('click', openDashboardView); // Do buttons ab same action karte hain
+buttonCloseDashboard.addEventListener('click', closeDashboardView);
+
+/* ==========================================
+   SMOOTH SCROLL FOR NAVBAR
+   ========================================== */
+/* Ye code ensure karega ki jab user nav links par click kare toh page smoothly glide kare */
+document.querySelectorAll('.navItem').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+        
+        targetElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    });
+});
+
+/* Event Listeners for Navigation */
+buttonLaunchDashboard.addEventListener('click', openDashboardView);
+buttonCloseDashboard.addEventListener('click', closeDashboardView);
 /*
   FUNCTION 1: DOM me Transaction List Item Inject Karna
   Ye function ek naya <li> element banayega aur usko History UI me dikhayega.
