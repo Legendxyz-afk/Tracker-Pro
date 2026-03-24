@@ -613,6 +613,10 @@ body {
 /* @keyframes define karte hain animation ka start (0%) aur end (100%).
    Yahan translateY() vertically move kar raha hai, aur opacity fade out kar rahi hai.
 */
+html {
+    /* Ye ek line pura JS smooth-scroll logic replace kar deti hai */
+    scroll-behavior: smooth; 
+}
 @keyframes floatUpwardsFadeOut {
     0% { opacity: 1; transform: translate(-50%, -50%) scale(0.8); }
     10% { transform: translate(-50%, -50%) scale(1.2); } /* Quick pop effect */
