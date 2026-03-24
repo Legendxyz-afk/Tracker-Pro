@@ -617,6 +617,79 @@ html {
     /* Ye ek line pura JS smooth-scroll logic replace kar deti hai */
     scroll-behavior: smooth; 
 }
+.userSettingsSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 24px;
+    gap: 16px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.currencyInputWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.currencySymbol {
+    position: absolute;
+    left: 12px;
+    color: var(--color-text-secondary);
+    font-weight: 600;
+}
+
+.cleanInput.withCurrency {
+    padding-left: 28px; /* Currency symbol ke liye space banana */
+}
+
+.dangerText {
+    color: var(--color-expense);
+}
+
+.dangerText:hover {
+    color: #b91c1c; /* Darker red on hover */
+    text-decoration: underline;
+}
+.transactionTypeSelector {
+    display: flex;
+    background-color: var(--bg-page);
+    padding: 4px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 20px;
+    border: 1px solid var(--color-border);
+}
+
+.hiddenRadio {
+    display: none; /* Original radio circles ko hide kar diya */
+}
+
+.toggleLabel {
+    flex: 1;
+    text-align: center;
+    padding: 8px 16px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Jab Expense radio select ho, toh uske label ko red highlight karo */
+#typeExpense:checked + .toggleLabel {
+    background-color: white;
+    color: var(--color-expense);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Jab Income radio select ho, toh uske label ko green highlight karo */
+#typeIncome:checked + .toggleLabel {
+    background-color: white;
+    color: var(--color-income);
+    box-shadow: var(--shadow-sm);
+}
 @keyframes floatUpwardsFadeOut {
     0% { opacity: 1; transform: translate(-50%, -50%) scale(0.8); }
     10% { transform: translate(-50%, -50%) scale(1.2); } /* Quick pop effect */
