@@ -100,17 +100,25 @@ $('btnClearData').addEventListener('click', () => {
 // Form Submission Event
 UI.form.addEventListener('submit', (e) => {
     e.preventDefault();
+    
     const desc = UI.desc.value.trim();
-    const amt = parseFloat(UI.amt.value.trim());
+    // User hamesha positive number type karega (Math.abs ensures this)
+    const rawAmt = Math.abs(parseFloat(UI.amt.value.trim()));
 
-    if (!desc || isNaN(amt)) return alert("Please provide a valid description and amount.");
+    if (!desc || isNaN(rawAmt)) return alert("Please provide a valid description and amount.");
 
-    const newTxn = { desc, amt };
+    /* LOGIC: Check karo ki form me konsa radio button selected hai. 
+       Agar 'expense' hai, toh rawAmt ko -1 se multiply kar do, warna positive rehne do. */
+    const selectedType = document.querySelector('input[name="transactionType"]:checked').value;
+    const finalAmount = selectedType === 'expense' ? -rawAmt : rawAmt;
+
+    // Naye transaction object me final calculated amount save karo
+    const newTxn = { desc, amt: finalAmount };
     txns.push(newTxn);
 
     renderItem(newTxn);
     updateMetrics();
-    triggerAnimation(amt);
+    triggerAnimation(finalAmount);
     saveState();
 
     UI.form.reset();

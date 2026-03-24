@@ -144,15 +144,30 @@
 
         <section class="transactionEntrySection">
             <h3 class="sectionTitle">Record Transaction</h3>
+            
             <form id="financialEntryForm" class="entryForm">
+                
+                <div class="transactionTypeSelector">
+                    <input type="radio" id="typeExpense" name="transactionType" value="expense" checked class="hiddenRadio">
+                    <label for="typeExpense" class="toggleLabel">Expense</label>
+
+                    <input type="radio" id="typeIncome" name="transactionType" value="income" class="hiddenRadio">
+                    <label for="typeIncome" class="toggleLabel">Income</label>
+                </div>
+
                 <div class="inputWrapper">
                     <label for="inputTransactionDesc" class="inputLabel">Description</label>
                     <input type="text" id="inputTransactionDesc" class="cleanInput" placeholder="e.g., Client Dinner, AWS Hosting" autocomplete="off" required>
                 </div>
+                
                 <div class="inputWrapper">
-                    <label for="inputTransactionAmt" class="inputLabel">Amount <span class="labelHint">(Use '-' for expenses)</span></label>
-                    <input type="number" id="inputTransactionAmt" class="cleanInput" placeholder="e.g., -150.00" step="0.01" required>
+                    <label for="inputTransactionAmt" class="inputLabel">Amount</label>
+                    <div class="currencyInputWrapper">
+                        <span class="currencySymbol">₹</span>
+                        <input type="number" id="inputTransactionAmt" class="cleanInput withCurrency" placeholder="e.g., 1500" step="0.01" min="0" required>
+                    </div>
                 </div>
+                
                 <button type="submit" class="actionButtonPrimary">Save Transaction</button>
             </form>
         </section>
