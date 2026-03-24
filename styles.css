@@ -1,703 +1,229 @@
 :root {
-    --bg-page: #F4F5F8; /* Soft slate gray background */
-    --bg-surface: #FFFFFF; /* Pure white cards */
-    --color-text-primary: #0A142F; /* Deep navy/black for high readability */
-    --color-text-secondary: #64748B; /* Muted text for labels */
-    --color-border: #E2E8F0; /* Subtle borders */
+    --bg-page: #F8FAFC; 
+    --bg-surface: #FFFFFF;
+    --bg-sidebar: #0B1120; /* Slightly darker slate for extra premium feel */
     
-    /* Functional Colors */
-    --color-income: #10B981; /* Emerald green */
-    --color-expense: #EF4444; /* Crisp red */
-    --color-brand-primary: #002D40; /* Expensify-like deep corporate blue */
-    --color-brand-button: #10B981;
-    --color-brand-button-hover: #059669;
+    --color-text-primary: #0F172A; 
+    --color-text-secondary: #64748B; 
+    --color-text-sidebar: #94A3B8;
+    --color-border: #E2E8F0; 
+    
+    --color-income: #059669; 
+    --color-expense: #DC2626; 
+    --color-brand-primary: #0F172A; 
+    --color-brand-button: #2563EB; 
+    --color-brand-button-hover: #1D4ED8;
 
-    /* Metrics */
     --radius-sm: 6px;
     --radius-md: 12px;
-    --radius-lg: 20px;
+    --radius-lg: 16px;
     --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+    --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
 }
 
-/* Global Reset & Typography */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Inter', sans-serif;
     background-color: var(--bg-page);
     color: var(--color-text-primary);
-    line-height: 1.5;
+    -webkit-font-smoothing: antialiased; 
+}
+
+.hiddenView { display: none !important; }
+.textMuted { color: var(--color-text-secondary); font-size: 0.875rem; }
+
+/* ==========================================
+   MARKETING SITE
+   ========================================== */
+.globalNavBar { position: fixed; top: 0; width: 100%; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--color-border); z-index: 1000; padding: 16px 0; }
+.navContainer { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
+.brandLogo { font-size: 1.5rem; font-weight: 800; color: var(--color-brand-primary); }
+.brandAccent { color: var(--color-brand-button); }
+.navLinks { display: flex; gap: 32px; }
+.navItem { text-decoration: none; color: var(--color-text-secondary); font-weight: 500; transition: color 0.2s; }
+.navItem:hover { color: var(--color-brand-primary); }
+.outlineButton { border: 2px solid var(--color-border); padding: 8px 16px; border-radius: var(--radius-sm); cursor: pointer; background: transparent; font-weight: 600; color: var(--color-brand-primary);}
+.outlineButton:hover { border-color: var(--color-brand-button); color: var(--color-brand-button); }
+
+.heroSection { min-height: 100vh; display: flex; justify-content: center; align-items: center; text-align: center; padding-top: 80px;}
+.landingContentBlock { max-width: 600px; }
+.brandBadge { display: inline-block; background: rgba(37, 99, 235, 0.1); color: var(--color-brand-button); padding: 6px 12px; border-radius: 20px; font-weight: 600; margin-bottom: 24px; }
+.heroHeadline { font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 16px; letter-spacing: -1px; }
+.textHighlight { color: var(--color-brand-button); }
+.heroSubtext { font-size: 1.125rem; color: var(--color-text-secondary); margin-bottom: 40px; }
+.primaryCTAButton { background: var(--color-brand-primary); color: white; border: none; padding: 16px 32px; font-size: 1.125rem; font-weight: 600; border-radius: var(--radius-md); cursor: pointer; transition: 0.2s; }
+.primaryCTAButton:hover { background: var(--color-brand-button); transform: translateY(-2px); box-shadow: 0 10px 15px rgba(37, 99, 235, 0.2); }
+
+.marketingSection { padding: 100px 24px; }
+.sectionAlternateBg { background-color: white; }
+.sectionContainer { max-width: 1000px; margin: 0 auto; }
+.sectionTitleCenter { text-align: center; font-size: 2.5rem; font-weight: 800; margin-bottom: 40px; letter-spacing: -0.5px;}
+
+.featuresGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px; }
+.featureCard { padding: 32px; border-radius: var(--radius-md); border: 1px solid var(--color-border); background: var(--bg-page); transition: 0.3s; }
+.featureCard:hover { transform: translateY(-5px); box-shadow: var(--shadow-card); }
+.featureIcon { font-size: 2.5rem; margin-bottom: 16px; }
+.featureTitle { font-size: 1.25rem; font-weight: 700; margin-bottom: 12px;}
+.featureText { color: var(--color-text-secondary); line-height: 1.6;}
+
+/* About Us Layout */
+.splitLayout { display: flex; align-items: center; gap: 64px; }
+.splitTextContent, .splitImageContent { flex: 1; }
+.sectionTitleLeft { font-size: 2.5rem; font-weight: 800; margin-bottom: 24px; color: var(--color-brand-primary); }
+.paragraphText { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.7; margin-bottom: 16px; }
+.imagePlaceholder { background: linear-gradient(135deg, var(--color-brand-primary), var(--color-brand-button)); height: 400px; border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.25rem; box-shadow: var(--shadow-md); }
+
+/* ==========================================
+   BMW-STYLE CONTACT SECTION
+   ========================================== */
+.bmwContactSection { background-color: #050505; color: #ffffff; padding: 120px 24px; }
+.bmwContactWrapper { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.bmwTitle { font-size: 3.5rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 24px; line-height: 1.1; color: #FFFFFF;}
+.bmwSub { font-size: 1.125rem; color: #888888; line-height: 1.6; font-weight: 300; }
+
+.bmwForm { display: flex; flex-direction: column; gap: 32px; }
+.bmwInput { width: 100%; background: transparent; border: none; border-bottom: 1px solid #333333; color: white; padding: 12px 0; font-size: 1.125rem; font-weight: 300; font-family: 'Inter', sans-serif; transition: border-color 0.3s ease; outline: none; resize: vertical; }
+.bmwInput::placeholder { color: #555555; }
+.bmwInput:focus { border-bottom-color: var(--color-brand-button); }
+
+/* Sharp, precise button styling */
+.bmwSubmitBtn { background: transparent; border: 1px solid white; color: white; padding: 18px 36px; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: 16px; width: max-content;}
+.bmwSubmitBtn:hover { background: white; color: black; }
+
+.globalFooter { text-align: center; padding: 40px; border-top: 1px solid var(--color-border); background: var(--bg-surface);}
+
+@media (max-width: 768px) {
+    .splitLayout, .bmwContactWrapper { flex-direction: column; grid-template-columns: 1fr; gap: 40px;}
+    .bmwTitle { font-size: 2.5rem; }
+}
+
+/* ==========================================
+   ENTERPRISE DASHBOARD
+   ========================================== */
+.dashboardLayout {
     display: flex;
-    justify-content: center;
-    padding: 20px;
-    -webkit-font-smoothing: antialiased; /* Mac par text crisp dikhne ke liye */
-}
-
-/* Dashboard Container: Card-based UI jo screen ke center me rahega */
-.dashboardContainer {
-    background-color: var(--bg-surface);
-    width: 100%;
-    max-width: 480px; /* Thoda wide kiya hai taaki form fields ko space mile */
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
-    padding: 32px 24px;
-}
-
-/* Header */
-.dashboardHeader {
-    text-align: center;
-    margin-bottom: 32px;
-}
-
-.brandTitle {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: var(--color-brand-primary);
-    letter-spacing: -0.5px;
-}
-
-.brandAccent {
-    color: var(--color-brand-button);
-}
-
-.brandSubtitle {
-    color: var(--color-text-secondary);
-    font-size: 0.875rem;
-    font-weight: 500;
-    margin-top: 4px;
-}
-
-/* Master Balance */
-.masterBalanceSection {
-    text-align: center;
-    margin-bottom: 32px;
-}
-
-.balanceLabel {
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-text-secondary);
-    margin-bottom: 8px;
-}
-
-.balanceAmount {
-    font-size: 3rem;
-    font-weight: 700;
-    letter-spacing: -1px;
-}
-
-/* Financial Metrics Grid: CSS Grid ka use karke equal width cards banaye hain */
-.financialMetricsGrid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 32px;
-}
-
-.metricCard {
-    background-color: var(--bg-page);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    padding: 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.metricIcon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    font-weight: bold;
-    font-size: 1.2rem;
-}
-
-.incomeCard .metricIcon {
-    background-color: rgba(16, 185, 129, 0.1);
-    color: var(--color-income);
-}
-
-.expenseCard .metricIcon {
-    background-color: rgba(239, 68, 68, 0.1);
-    color: var(--color-expense);
-}
-
-.metricLabel {
-    font-size: 0.75rem;
-    color: var(--color-text-secondary);
-    font-weight: 600;
-    text-transform: uppercase;
-}
-
-.metricAmount {
-    font-size: 1.125rem;
-    font-weight: 700;
-}
-
-.incomeAmount { color: var(--color-income); }
-.expenseAmount { color: var(--color-expense); }
-
-/* Forms & Inputs: Enterprise style floating-like labels and crisp inputs */
-.sectionTitle {
-    font-size: 1.125rem;
-    font-weight: 600;
-    margin-bottom: 16px;
-    color: var(--color-brand-primary);
-}
-
-.transactionEntrySection {
-    margin-bottom: 32px;
-    padding-bottom: 32px;
-    border-bottom: 1px solid var(--color-border);
-}
-
-.inputWrapper {
-    margin-bottom: 16px;
-}
-
-.inputLabel {
-    display: block;
-    font-size: 0.875rem;
-    font-weight: 500;
-    margin-bottom: 6px;
-    color: var(--color-text-primary);
-}
-
-.labelHint {
-    color: var(--color-text-secondary);
-    font-size: 0.75rem;
-    font-weight: 400;
-}
-
-.cleanInput {
-    width: 100%;
-    padding: 12px 16px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    font-size: 1rem;
-    font-family: inherit;
-    transition: all 0.2s ease;
-    background-color: var(--bg-surface);
-}
-
-/* Focus state: accessibility aur UX ke liye highlight karna zaroori hai */
-.cleanInput:focus {
-    outline: none;
-    border-color: var(--color-brand-button);
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
-}
-
-/* Primary Action Button */
-.actionButtonPrimary {
-    width: 100%;
-    background-color: var(--color-brand-button);
-    color: white;
-    border: none;
-    padding: 14px;
-    font-size: 1rem;
-    font-weight: 600;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-    margin-top: 8px;
-}
-
-.actionButtonPrimary:hover {
-    background-color: var(--color-brand-button-hover);
-}
-
-.actionButtonPrimary:active {
-    transform: scale(0.98); /* Click par slight press effect */
-}
-
-/* Ledger / History Section */
-.sectionHeaderWithAction {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-}
-
-.textButtonSecondary {
-    background: none;
-    border: none;
-    color: var(--color-brand-button);
-    font-weight: 600;
-    font-size: 0.875rem;
-    cursor: pointer;
-}
-
-.textButtonSecondary:hover {
-    text-decoration: underline;
-}
-
-.ledgerList {
-    list-style: none;
-}
-
-.ledgerItem {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--color-border);
-}
-
-.ledgerItem:last-child {
-    border-bottom: none;
-}
-
-.ledgerItemDetails {
-    display: flex;
-    flex-direction: column;
-}
-
-.ledgerItemDesc {
-    font-weight: 500;
-    font-size: 0.95rem;
-}
-
-.ledgerItemDate {
-    font-size: 0.75rem;
-    color: var(--color-text-secondary);
-    margin-top: 2px;
-}
-
-.ledgerItemValue {
-    font-weight: 600;
-    font-size: 1rem;
-}
-.masterBalanceSection {
-    position: relative; 
-}
-
-/* Floating animation element ki default state */
-.animatedMoneyFloat {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); /* Center align karne ke liye */
-    font-size: 1.5rem;
-    font-weight: 700;
-    pointer-events: none; /* User ispe galti se click na kar de */
-    opacity: 1;
-    z-index: 10;
-}
-
-/* Specific colors for the floating text */
-.floatIncomeText {
-    color: var(--color-income);
-    animation: floatUpwardsFadeOut 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-}
-
-.floatExpenseText {
-    color: var(--color-expense);
-    animation: floatDownwardsFadeOut 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-}
-/* Utility class to hard-hide views from the DOM rendering engine */
-.hiddenView {
-    display: none !important;
-}
-
-/* Smooth fade-in animation jab view change ho taaki sudden jhatka na lage */
-.fadeAndSlideIn {
-    animation: entranceAnimation 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden; 
+    background: var(--bg-page);
+    animation: entranceAnimation 0.4s ease forwards;
 }
 
 @keyframes entranceAnimation {
-    0% { opacity: 0; transform: translateY(20px); }
-    100% { opacity: 1; transform: translateY(0); }
+    0% { opacity: 0; transform: scale(0.98); }
+    100% { opacity: 1; transform: scale(1); }
 }
 
-/* Landing Page Layout */
-.landingPageContainer {
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--bg-page);
-    padding: 20px;
-    text-align: center;
-}
+/* SIDEBAR */
+.dashSidebar { width: 280px; background-color: var(--bg-sidebar); color: white; display: flex; flex-direction: column; padding: 24px; border-right: 1px solid rgba(255,255,255,0.05); }
+.dashSidebar .brandLogo { color: white; margin-bottom: 32px; }
+.dashSidebar .brandAccent { color: #3B82F6; }
 
-.landingContentBlock {
-    max-width: 600px;
-}
+/* FIX: Seamless Editable Profile */
+.userProfileCard { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.05); padding: 16px; border-radius: var(--radius-md); margin-bottom: 32px; }
+.userAvatar { width: 40px; height: 40px; background: #3B82F6; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; }
+.userInfo { flex: 1; display: flex; flex-direction: column; }
 
-.brandBadge {
-    display: inline-block;
-    background-color: rgba(16, 185, 129, 0.1);
-    color: var(--color-brand-button);
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.875rem;
-    font-weight: 600;
-    margin-bottom: 24px;
-}
-
-.heroHeadline {
-    font-size: 3rem;
-    font-weight: 800;
-    color: var(--color-brand-primary);
-    line-height: 1.1;
-    margin-bottom: 16px;
-    letter-spacing: -1px;
-}
-
-.textHighlight {
-    color: var(--color-brand-button);
-}
-
-.heroSubtext {
-    font-size: 1.125rem;
-    color: var(--color-text-secondary);
-    margin-bottom: 40px;
-    line-height: 1.6;
-}
-
-/* Call to Action Button */
-.primaryCTAButton {
-    background-color: var(--color-brand-primary);
+.seamlessNameInput {
+    background: transparent;
+    border: 1px solid transparent;
     color: white;
-    border: none;
-    padding: 16px 32px;
-    font-size: 1.125rem;
     font-weight: 600;
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 10px 15px -3px rgba(0, 45, 64, 0.2);
-}
-
-.primaryCTAButton:hover {
-    background-color: #001f2e;
-    transform: translateY(-2px);
-    box-shadow: 0 20px 25px -5px rgba(0, 45, 64, 0.3);
-}
-
-.arrowIcon {
-    transition: transform 0.3s ease;
-}
-
-.primaryCTAButton:hover .arrowIcon {
-    transform: translateX(4px); /* Hover par arrow aage move karta hai */
-}
-
-/* Dashboard Header Row adjust kar rahe hain taaki exit button fit ho sake */
-.headerTopRow {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.globalNavBar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(10px); /* Apple-style frosted glass effect */
-    border-bottom: 1px solid var(--color-border);
-    z-index: 1000;
-    padding: 16px 0;
-}
-
-.navContainer {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.brandLogo {
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: var(--color-brand-primary);
-}
-
-.navLinks {
-    display: flex;
-    gap: 32px;
-}
-
-.navItem {
-    text-decoration: none;
-    color: var(--color-text-secondary);
-    font-weight: 500;
     font-size: 0.95rem;
-    transition: color 0.2s ease;
-}
-
-.navItem:hover {
-    color: var(--color-brand-primary);
-}
-
-.outlineButton {
-    border: 2px solid var(--color-border);
-    padding: 8px 16px;
-    border-radius: var(--radius-sm);
-    color: var(--color-text-primary);
-}
-
-.outlineButton:hover {
-    border-color: var(--color-brand-button);
-    text-decoration: none;
-}
-
-/* Marketing Sections Generic Structure */
-.marketingSection {
-    padding: 100px 24px; /* Generous breathing room */
-}
-
-.sectionAlternateBg {
-    background-color: #ffffff;
-}
-
-.sectionContainer {
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-.sectionTitleCenter {
-    text-align: center;
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: var(--color-brand-primary);
-    margin-bottom: 16px;
-    letter-spacing: -0.5px;
-}
-
-.sectionSubtitleCenter {
-    text-align: center;
-    font-size: 1.125rem;
-    color: var(--color-text-secondary);
-    margin-bottom: 64px;
-}
-
-/* Features Grid */
-.featuresGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 32px;
-}
-
-.featureCard {
-    background: var(--bg-page);
-    padding: 32px;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--color-border);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.featureCard:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-md);
-}
-
-.featureIcon {
-    font-size: 2.5rem;
-    margin-bottom: 16px;
-}
-
-.featureTitle {
-    font-size: 1.25rem;
-    margin-bottom: 12px;
-    color: var(--color-brand-primary);
-}
-
-.featureText {
-    color: var(--color-text-secondary);
-    line-height: 1.6;
-}
-
-/* About Us Split Layout */
-.splitLayout {
-    display: flex;
-    align-items: center;
-    gap: 64px;
-}
-
-.splitTextContent, .splitImageContent {
-    flex: 1;
-}
-
-.sectionTitleLeft {
-    font-size: 2.5rem;
-    font-weight: 800;
-    margin-bottom: 24px;
-    color: var(--color-brand-primary);
-}
-
-.paragraphText {
-    font-size: 1.125rem;
-    color: var(--color-text-secondary);
-    line-height: 1.7;
-    margin-bottom: 16px;
-}
-
-.imagePlaceholder {
-    background: linear-gradient(135deg, var(--color-brand-primary), var(--color-brand-button));
-    height: 400px;
-    border-radius: var(--radius-lg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-    font-size: 1.25rem;
-    box-shadow: var(--shadow-md);
-}
-
-/* Contact Form Specifics */
-.contactLayout {
-    max-width: 600px; /* Keep form narrow for readability */
-}
-
-.contactForm {
-    background: var(--bg-page);
-    padding: 40px;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--color-border);
-}
-
-.textArea {
-    resize: vertical;
-    min-height: 120px;
-}
-
-.fullWidth {
+    font-family: inherit;
     width: 100%;
-    margin-top: 16px;
-}
-
-/* Footer */
-.globalFooter {
-    text-align: center;
-    padding: 40px 24px;
-    color: var(--color-text-secondary);
-    font-size: 0.875rem;
-    border-top: 1px solid var(--color-border);
-    background-color: var(--bg-page);
-}
-
-/* Make sure Hero Section respects the sticky navbar */
-.heroSection {
-    margin-top: 80px; 
-    min-height: calc(100vh - 80px); /* Full screen minus nav bar */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
-
-/* Responsive fixes for mobile */
-@media (max-width: 768px) {
-    .navLinks { display: none; } /* Hide text links on very small screens */
-    .splitLayout { flex-direction: column; }
-    .heroHeadline { font-size: 2.5rem; }
-}
-/* @keyframes define karte hain animation ka start (0%) aur end (100%).
-   Yahan translateY() vertically move kar raha hai, aur opacity fade out kar rahi hai.
-*/
-html {
-    /* Ye ek line pura JS smooth-scroll logic replace kar deti hai */
-    scroll-behavior: smooth; 
-}
-.userSettingsSection {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 24px;
-    gap: 16px;
-    padding-bottom: 24px;
-    border-bottom: 1px solid var(--color-border);
-}
-
-.currencyInputWrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.currencySymbol {
-    position: absolute;
-    left: 12px;
-    color: var(--color-text-secondary);
-    font-weight: 600;
-}
-
-.cleanInput.withCurrency {
-    padding-left: 28px; /* Currency symbol ke liye space banana */
-}
-
-.dangerText {
-    color: var(--color-expense);
-}
-
-.dangerText:hover {
-    color: #b91c1c; /* Darker red on hover */
-    text-decoration: underline;
-}
-.transactionTypeSelector {
-    display: flex;
-    background-color: var(--bg-page);
-    padding: 4px;
-    border-radius: var(--radius-sm);
-    margin-bottom: 20px;
-    border: 1px solid var(--color-border);
-}
-
-.hiddenRadio {
-    display: none; /* Original radio circles ko hide kar diya */
-}
-
-.toggleLabel {
-    flex: 1;
-    text-align: center;
-    padding: 8px 16px;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--color-text-secondary);
+    padding: 2px 4px;
+    margin-left: -4px;
     border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    transition: 0.2s;
+    outline: none;
 }
+.seamlessNameInput:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); cursor: text; }
+.seamlessNameInput:focus { background: white; color: var(--color-text-primary); border-color: white; }
+.userRole { font-size: 0.75rem; color: var(--color-text-sidebar); margin-left: 2px; }
 
-/* Jab Expense radio select ho, toh uske label ko red highlight karo */
-#typeExpense:checked + .toggleLabel {
-    background-color: white;
-    color: var(--color-expense);
-    box-shadow: var(--shadow-sm);
-}
+.sidebarNav { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.sidebarLink { text-decoration: none; color: var(--color-text-sidebar); padding: 12px 16px; border-radius: var(--radius-sm); font-weight: 500; transition: 0.2s; }
+.sidebarLink:hover, .sidebarLink.active { background: rgba(255,255,255,0.1); color: white; }
 
-/* Jab Income radio select ho, toh uske label ko green highlight karo */
-#typeIncome:checked + .toggleLabel {
-    background-color: white;
-    color: var(--color-income);
-    box-shadow: var(--shadow-sm);
-}
-@keyframes floatUpwardsFadeOut {
-    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.8); }
-    10% { transform: translate(-50%, -50%) scale(1.2); } /* Quick pop effect */
-    100% { opacity: 0; transform: translate(-50%, -120px) scale(1); } /* Floats UP */
-}
+.sidebarWidgets { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; margin-bottom: 24px; }
+.widgetBox { margin-bottom: 16px; }
+.widgetBox .inputLabel { color: var(--color-text-sidebar); }
 
-@keyframes floatDownwardsFadeOut {
-    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.8); }
-    10% { transform: translate(-50%, -50%) scale(1.2); }
-    100% { opacity: 0; transform: translate(-50%, 50px) scale(1); } /* Floats DOWN */
+/* FIX: Absolute clarity on Sidebar Inputs */
+.sidebarInput { 
+    background-color: #FFFFFF !important; 
+    color: #0F172A !important; 
+    border: 2px solid transparent; 
 }
+.sidebarInput::placeholder { color: #64748B !important; }
+.sidebarInput:focus { border-color: #3B82F6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4); }
+
+.sidebarExitBtn { background: transparent; border: none; color: var(--color-text-sidebar); cursor: pointer; text-align: left; padding: 12px 0; font-weight: 500; }
+.sidebarExitBtn:hover { color: white; }
+
+/* MAIN CONTENT AREA */
+.dashMainContent { flex: 1; overflow-y: auto; padding: 40px 48px; }
+.mainHeader { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; }
+.greetingText { font-size: 2rem; font-weight: 800; letter-spacing: -0.5px; }
+.headerControls { display: flex; gap: 16px; align-items: center; }
+.searchInput { min-width: 250px; border-radius: 20px; padding: 10px 16px; }
+.dangerOutlineBtn { border: 1px solid var(--color-expense); color: var(--color-expense); background: transparent; padding: 10px 16px; border-radius: 20px; cursor: pointer; font-weight: 600; transition: 0.2s;}
+.dangerOutlineBtn:hover { background: var(--color-expense); color: white; }
+
+/* QUAD METRICS GRID */
+.metricsQuadGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 32px; }
+.metricCard { background: white; padding: 24px; border-radius: var(--radius-md); box-shadow: var(--shadow-card); border: 1px solid var(--color-border); }
+.metricLabel { font-size: 0.875rem; color: var(--color-text-secondary); font-weight: 600; text-transform: uppercase; margin-bottom: 8px; }
+.metricAmount { font-size: 1.75rem; font-weight: 700; }
+.incomeAmount { color: var(--color-income); }
+.expenseAmount { color: var(--color-expense); }
+
+/* VISUAL ANALYTICS BAR */
+.analyticsSection { background: white; padding: 20px 24px; border-radius: var(--radius-md); box-shadow: var(--shadow-card); border: 1px solid var(--color-border); margin-bottom: 32px; }
+.barLabels { display: flex; justify-content: space-between; margin-bottom: 8px; font-weight: 600; font-size: 0.875rem;}
+.visualBarTrack { width: 100%; height: 12px; background: #D1D5DB; border-radius: 6px; overflow: hidden; }
+.visualBarFill { height: 100%; background: var(--color-expense); width: 0%; transition: width 0.5s ease-out; }
+
+/* SPLIT LAYOUT */
+.dashboardSplitLayout { display: grid; grid-template-columns: 1fr 2fr; gap: 32px; }
+.splitColumn { background: white; padding: 24px; border-radius: var(--radius-md); box-shadow: var(--shadow-card); border: 1px solid var(--color-border); display: flex; flex-direction: column; }
+.sectionTitle { font-size: 1.125rem; font-weight: 700; margin-bottom: 20px; border-bottom: 1px solid var(--color-border); padding-bottom: 12px; }
+
+/* Forms */
+.inputWrapper { margin-bottom: 16px; }
+.inputLabel { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 6px; }
+.cleanInput { width: 100%; padding: 12px 16px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-size: 0.95rem; background: #F8FAFC; outline: none; transition: 0.2s;}
+.cleanInput:focus { border-color: var(--color-brand-button); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); background: white; }
+.currencyInputWrapper { position: relative; }
+.currencySymbol { position: absolute; left: 16px; top: 12px; font-weight: 600; color: var(--color-text-secondary); }
+.withCurrency { padding-left: 32px; }
+.actionButtonPrimary { width: 100%; background: var(--color-brand-button); color: white; border: none; padding: 14px; font-weight: 600; border-radius: var(--radius-sm); cursor: pointer; transition: 0.2s; }
+.actionButtonPrimary:hover { background: var(--color-brand-button-hover); }
+.smallBtn { padding: 10px; font-size: 0.875rem; margin-top: 8px; }
+
+/* Toggles */
+.transactionTypeSelector { display: flex; background: #F1F5F9; padding: 4px; border-radius: 8px; margin-bottom: 20px; }
+.hiddenRadio { display: none; }
+.toggleLabel { flex: 1; text-align: center; padding: 8px; font-size: 0.875rem; font-weight: 600; color: var(--color-text-secondary); border-radius: 6px; cursor: pointer; transition: 0.2s; }
+#typeExpense:checked + .toggleLabel { background: white; color: var(--color-expense); box-shadow: var(--shadow-sm); }
+#typeIncome:checked + .toggleLabel { background: white; color: var(--color-income); box-shadow: var(--shadow-sm); }
+
+/* Ledger */
+.fullHeightScroll { flex: 1; overflow-y: auto; max-height: 500px; padding-right: 8px; }
+.fullHeightScroll::-webkit-scrollbar { width: 6px; }
+.fullHeightScroll::-webkit-scrollbar-thumb { background-color: #CBD5E1; border-radius: 10px; }
+
+.ledgerList { list-style: none; }
+.ledgerItem { display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 16px; padding: 16px 12px; border-bottom: 1px solid var(--color-border); transition: 0.2s; }
+.ledgerItem:hover { background: #F8FAFC; }
+.catIcon { font-size: 1.5rem; background: #F1F5F9; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+.ledgerItemDesc { font-weight: 600; font-size: 0.95rem; }
+.ledgerItemDate { font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 4px; }
+.ledgerItemValue { font-weight: 700; font-size: 1.1rem; text-align: right;}
+.ledgerItem.incomeItem .ledgerItemValue { color: var(--color-income); }
+.ledgerItem.expenseItem .ledgerItemValue { color: var(--color-expense); }
+
+.deleteBtn { background: transparent; border: none; color: #94A3B8; cursor: pointer; font-size: 1.2rem; padding: 4px; border-radius: 4px;}
+.deleteBtn:hover { color: var(--color-expense); background: #FEE2E2; }

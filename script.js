@@ -1,7 +1,6 @@
 /* ==========================================
    1. UTILITIES & DOM MAPPING
    ========================================== */
-// Helper function to drastically reduce document.getElementById repetition
 const $ = (id) => document.getElementById(id);
 
 const UI = {
@@ -10,123 +9,212 @@ const UI = {
     balance: $('displayMasterBalance'),
     income: $('displayTotalIncome'),
     expense: $('displayTotalExpense'),
+    remaining: $('displayRemainingBudget'),
     ledger: $('transactionLedgerList'),
     form: $('financialEntryForm'),
     desc: $('inputTransactionDesc'),
     amt: $('inputTransactionAmt'),
-    salary: $('inputBaseSalary')
+    category: $('inputCategory'),
+    salary: $('inputBaseSalary'),
+    budget: $('inputMonthlyBudget'),
+    search: $('searchTransactions'),
+    ratioBar: $('expenseVisualBar'),
+    ratioText: $('expenseRatioText'),
+    greeting: $('greetingMessage'),
+    dateDisplay: $('currentDateDisplay'),
+    profileName: $('userProfileName'),
+    avatarText: $('userAvatarText')
+};
+
+const formatINR = (amount) => {
+    return new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR',
+        minimumFractionDigits: 2
+    }).format(amount);
 };
 
 /* ==========================================
    2. STATE MANAGEMENT & LOCAL STORAGE
    ========================================== */
 let txns = JSON.parse(localStorage.getItem('trackerPro_txns')) || [];
+let userName = localStorage.getItem('trackerPro_userName') || 'Ghost';
+
+// Initialize Inputs and Profile
 UI.salary.value = localStorage.getItem('trackerPro_salary') || '';
+UI.budget.value = localStorage.getItem('trackerPro_budget') || '';
+UI.profileName.value = userName;
+UI.avatarText.innerText = userName.charAt(0).toUpperCase();
 
 const saveState = () => {
     localStorage.setItem('trackerPro_txns', JSON.stringify(txns));
     localStorage.setItem('trackerPro_salary', UI.salary.value);
+    localStorage.setItem('trackerPro_budget', UI.budget.value);
 };
 
 /* ==========================================
-   3. SPA ROUTING (VIEW CONTROLLER)
+   3. PROFILE EDITING & DYNAMIC GREETING
+   ========================================== */
+const updateGreeting = () => {
+    const hour = new Date().getHours();
+    let greet = "Good Evening";
+    if (hour < 12) greet = "Good Morning";
+    else if (hour < 17) greet = "Good Afternoon";
+    
+    UI.greeting.innerText = `${greet}, ${userName}`;
+    UI.dateDisplay.innerText = new Date().toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+};
+
+// When user types a new name, save it instantly
+UI.profileName.addEventListener('input', (e) => {
+    const newName = e.target.value.trim() || 'User';
+    userName = newName;
+    UI.avatarText.innerText = newName.charAt(0).toUpperCase();
+    localStorage.setItem('trackerPro_userName', newName);
+    updateGreeting();
+});
+
+// Remove focus when they hit enter
+UI.profileName.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        UI.profileName.blur(); 
+    }
+});
+
+
+/* ==========================================
+   4. SPA ROUTING
    ========================================== */
 const toggleView = (isOpening) => {
     UI.marketing.classList.toggle('hiddenView', isOpening);
     UI.dashboard.classList.toggle('hiddenView', !isOpening);
-    if (isOpening) UI.dashboard.classList.add('fadeAndSlideIn');
-    window.scrollTo(0, 0);
+    if (isOpening) updateGreeting();
 };
 
+
 /* ==========================================
-   4. CORE FINANCIAL MATH & DOM UPDATES
+   5. CORE FINANCIAL MATH & DOM UPDATES
    ========================================== */
 const updateMetrics = () => {
-    const baseSalary = parseFloat(UI.salary.value) || 0;
-    const amounts = txns.map(t => t.amt);
+    const budget = parseFloat(UI.budget.value) || 0;
     
-    const inc = amounts.filter(a => a > 0).reduce((acc, val) => acc + val, 0) + baseSalary;
-    const exp = amounts.filter(a => a < 0).reduce((acc, val) => acc + val, 0);
-    const bal = amounts.reduce((acc, val) => acc + val, 0) + baseSalary;
+    const inc = txns.filter(t => t.amt > 0).reduce((acc, val) => acc + val.amt, 0);
+    const exp = txns.filter(t => t.amt < 0).reduce((acc, val) => acc + val.amt, 0);
+    const bal = inc + exp; 
 
-    UI.income.innerText = `+₹${inc.toFixed(2)}`;
-    UI.expense.innerText = `-₹${Math.abs(exp).toFixed(2)}`;
-    UI.balance.innerText = `${bal < 0 ? '-' : ''}₹${Math.abs(bal).toFixed(2)}`;
-};
-
-const renderItem = ({ desc, amt }) => {
-    const li = document.createElement('li');
-    li.className = `ledgerItem ${amt > 0 ? 'incomeItem' : 'expenseItem'}`;
-    li.innerHTML = `
-        <div class="ledgerItemDetails">
-            <span class="ledgerItemDesc">${desc}</span>
-            <span class="ledgerItemDate">Just now</span>
-        </div>
-        <span class="ledgerItemValue">${amt > 0 ? '+' : '-'}₹${Math.abs(amt).toFixed(2)}</span>
-    `;
-    UI.ledger.prepend(li); // Adds to top of list
-};
-
-const triggerAnimation = (amt) => {
-    const el = document.createElement('div');
-    el.className = `animatedMoneyFloat ${amt > 0 ? 'floatIncomeText' : 'floatExpenseText'}`;
-    el.textContent = `${amt > 0 ? '+' : '-'}₹${Math.abs(amt).toFixed(2)} ${amt > 0 ? '💵' : '💸'}`;
+    UI.income.innerText = `+${formatINR(inc).replace('₹', '₹ ')}`;
+    UI.expense.innerText = `-${formatINR(Math.abs(exp)).replace('₹', '₹ ')}`;
+    UI.balance.innerText = formatINR(bal).replace('₹', '₹ ');
     
-    document.querySelector('.masterBalanceSection').appendChild(el);
-    el.addEventListener('animationend', () => el.remove(), { once: true });
+    const remaining = budget - Math.abs(exp);
+    UI.remaining.innerText = formatINR(remaining).replace('₹', '₹ ');
+    UI.remaining.style.color = remaining < 0 ? 'var(--color-expense)' : 'var(--color-text-primary)';
+
+    if (inc > 0) {
+        let ratio = Math.min((Math.abs(exp) / inc) * 100, 100);
+        UI.ratioBar.style.width = `${ratio}%`;
+        UI.ratioText.innerText = `${ratio.toFixed(1)}% of Income Spent`;
+        UI.ratioBar.style.background = ratio > 80 ? 'var(--color-expense)' : '#F59E0B'; 
+    } else {
+        UI.ratioBar.style.width = `0%`;
+        UI.ratioText.innerText = `0%`;
+    }
 };
+
+const getCategoryIcon = (cat) => {
+    const icons = { 'Food': '🍔', 'Transport': '🚗', 'Utilities': '⚡', 'Shopping': '🛍️', 'Salary': '💰', 'Other': '📌' };
+    return icons[cat] || '📌';
+};
+
+const renderLedger = (filterText = '') => {
+    UI.ledger.innerHTML = ''; 
+    
+    const filteredTxns = txns.filter(t => 
+        t.desc.toLowerCase().includes(filterText.toLowerCase()) || 
+        t.cat.toLowerCase().includes(filterText.toLowerCase())
+    );
+
+    filteredTxns.sort((a, b) => b.id - a.id).forEach(t => {
+        const li = document.createElement('li');
+        li.className = `ledgerItem ${t.amt > 0 ? 'incomeItem' : 'expenseItem'}`;
+        
+        const dateStr = new Date(t.id).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+        
+        li.innerHTML = `
+            <div class="catIcon">${getCategoryIcon(t.cat)}</div>
+            <div class="ledgerItemDetails">
+                <span class="ledgerItemDesc">${t.desc}</span>
+                <span class="ledgerItemDate">${t.cat} • ${dateStr}</span>
+            </div>
+            <span class="ledgerItemValue">${t.amt > 0 ? '+' : '-'}${formatINR(Math.abs(t.amt))}</span>
+            <button class="deleteBtn" onclick="deleteTransaction(${t.id})">🗑️</button>
+        `;
+        UI.ledger.appendChild(li);
+    });
+};
+
+window.deleteTransaction = (id) => {
+    txns = txns.filter(t => t.id !== id);
+    saveState();
+    updateMetrics();
+    renderLedger(UI.search.value);
+};
+
 
 /* ==========================================
-   5. EVENT LISTENERS
+   6. EVENT LISTENERS & FEATURES
    ========================================== */
-// Navigation Events
 $('buttonLaunchDashboard').addEventListener('click', () => toggleView(true));
 $('navLaunchDashboard').addEventListener('click', () => toggleView(true));
 $('buttonCloseDashboard').addEventListener('click', () => toggleView(false));
 
-// Salary Input Event (Real-time update)
-UI.salary.addEventListener('input', () => { updateMetrics(); saveState(); });
+UI.salary.addEventListener('input', saveState);
+UI.budget.addEventListener('input', () => { updateMetrics(); saveState(); });
 
-// Clear Data Event
-$('btnClearData').addEventListener('click', () => {
-    if (!confirm("Wipe all data? This cannot be undone.")) return;
-    localStorage.clear();
-    txns = [];
-    UI.salary.value = '';
-    UI.ledger.innerHTML = '';
-    updateMetrics();
+UI.search.addEventListener('input', (e) => renderLedger(e.target.value));
+
+$('btnQuickSalary').addEventListener('click', () => {
+    const salaryAmt = parseFloat(UI.salary.value);
+    if (!salaryAmt || isNaN(salaryAmt)) return alert("Please enter a Base Salary in the sidebar first.");
+    
+    txns.push({ id: Date.now(), desc: 'Monthly Salary', amt: salaryAmt, cat: 'Salary' });
+    saveState(); updateMetrics(); renderLedger();
 });
 
-// Form Submission Event
+$('btnClearData').addEventListener('click', () => {
+    if (!confirm("Wipe all data? This cannot be undone.")) return;
+    localStorage.removeItem('trackerPro_txns');
+    localStorage.removeItem('trackerPro_salary');
+    localStorage.removeItem('trackerPro_budget');
+    txns = []; UI.salary.value = ''; UI.budget.value = ''; UI.search.value = '';
+    updateMetrics(); renderLedger();
+});
+
 UI.form.addEventListener('submit', (e) => {
     e.preventDefault();
     
     const desc = UI.desc.value.trim();
-    // User hamesha positive number type karega (Math.abs ensures this)
     const rawAmt = Math.abs(parseFloat(UI.amt.value.trim()));
+    const cat = UI.category.value;
 
     if (!desc || isNaN(rawAmt)) return alert("Please provide a valid description and amount.");
 
-    /* LOGIC: Check karo ki form me konsa radio button selected hai. 
-       Agar 'expense' hai, toh rawAmt ko -1 se multiply kar do, warna positive rehne do. */
     const selectedType = document.querySelector('input[name="transactionType"]:checked').value;
     const finalAmount = selectedType === 'expense' ? -rawAmt : rawAmt;
 
-    // Naye transaction object me final calculated amount save karo
-    const newTxn = { desc, amt: finalAmount };
-    txns.push(newTxn);
+    txns.push({ id: Date.now(), desc, amt: finalAmount, cat });
 
-    renderItem(newTxn);
-    updateMetrics();
-    triggerAnimation(finalAmount);
     saveState();
+    updateMetrics();
+    renderLedger(UI.search.value); 
 
     UI.form.reset();
     UI.desc.focus();
 });
 
 /* ==========================================
-   6. BOOTSTRAP (Initialize on Load)
+   7. BOOTSTRAP
    ========================================== */
-txns.forEach(renderItem);
 updateMetrics();
+renderLedger();
