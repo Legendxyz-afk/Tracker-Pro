@@ -103,6 +103,16 @@
 
     <main id="appDashboardWrapper" class="dashboardContainer hiddenView">
         <header class="dashboardHeader">
+            <section class="userSettingsSection">
+            <div class="inputWrapper">
+                <label for="inputBaseSalary" class="inputLabel">Monthly Salary (Base Income)</label>
+                <div class="currencyInputWrapper">
+                    <span class="currencySymbol">₹</span>
+                    <input type="number" id="inputBaseSalary" class="cleanInput withCurrency" placeholder="e.g., 50000" min="0">
+                </div>
+            </div>
+            <button id="btnClearData" class="textButtonSecondary dangerText">Clear All Data</button>
+        </section>
             <div class="headerTopRow">
                 <h1 class="brandTitle">Tracker<span class="brandAccent">Pro</span></h1>
                 <button id="buttonCloseDashboard" class="textButtonSecondary">← Exit to Site</button>

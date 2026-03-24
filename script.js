@@ -1,96 +1,124 @@
-const marketingSiteWrapper = document.getElementById('marketingSiteWrapper');
-const appDashboardWrapper = document.getElementById('appDashboardWrapper');
-const displayMasterBalance = document.getElementById('displayMasterBalance');
-const displayTotalIncome = document.getElementById('displayTotalIncome');
-const displayTotalExpense = document.getElementById('displayTotalExpense');
-const transactionLedgerList = document.getElementById('transactionLedgerList');
-const financialEntryForm = document.getElementById('financialEntryForm');
-const inputTransactionDesc = document.getElementById('inputTransactionDesc');
-const inputTransactionAmt = document.getElementById('inputTransactionAmt');
-
-let globalTransactionsArray = [];
-
 /* ==========================================
-   1. ULTRA-LEAN VIEW CONTROLLER (SPA ROUTING)
+   1. UTILITIES & DOM MAPPING
    ========================================== */
-/* Ek single compressed function dono open/close states ko handle kar raha hai using classList.toggle */
-const toggleDashboardView = (isOpening) => {
-    marketingSiteWrapper.classList.toggle('hiddenView', isOpening);
-    appDashboardWrapper.classList.toggle('hiddenView', !isOpening);
-    
-    if (isOpening) appDashboardWrapper.classList.add('fadeAndSlideIn');
-    window.scrollTo(0, 0); // Reset scroll position
+// Helper function to drastically reduce document.getElementById repetition
+const $ = (id) => document.getElementById(id);
+
+const UI = {
+    marketing: $('marketingSiteWrapper'),
+    dashboard: $('appDashboardWrapper'),
+    balance: $('displayMasterBalance'),
+    income: $('displayTotalIncome'),
+    expense: $('displayTotalExpense'),
+    ledger: $('transactionLedgerList'),
+    form: $('financialEntryForm'),
+    desc: $('inputTransactionDesc'),
+    amt: $('inputTransactionAmt'),
+    salary: $('inputBaseSalary')
 };
 
-document.getElementById('buttonLaunchDashboard').addEventListener('click', () => toggleDashboardView(true));
-document.getElementById('navLaunchDashboard').addEventListener('click', () => toggleDashboardView(true));
-document.getElementById('buttonCloseDashboard').addEventListener('click', () => toggleDashboardView(false));
+/* ==========================================
+   2. STATE MANAGEMENT & LOCAL STORAGE
+   ========================================== */
+let txns = JSON.parse(localStorage.getItem('trackerPro_txns')) || [];
+UI.salary.value = localStorage.getItem('trackerPro_salary') || '';
+
+const saveState = () => {
+    localStorage.setItem('trackerPro_txns', JSON.stringify(txns));
+    localStorage.setItem('trackerPro_salary', UI.salary.value);
+};
 
 /* ==========================================
-   2. EVENT-DRIVEN MICRO-ANIMATION
+   3. SPA ROUTING (VIEW CONTROLLER)
    ========================================== */
-function triggerMoneyAnimation(amount) {
-    const el = document.createElement('div');
-    
-    // Ternary operators se multiple if-else lines ko ek single string assignment me compress kiya
-    el.className = `animatedMoneyFloat ${amount > 0 ? 'floatIncomeText' : 'floatExpenseText'}`;
-    el.textContent = `${amount > 0 ? '+' : '-'}$${Math.abs(amount).toFixed(2)} ${amount > 0 ? '💵' : '💸'}`;
-    
-    document.querySelector('.masterBalanceSection').appendChild(el);
-
-    /* JS setTimeout use karne ki jagah native CSS event 'animationend' sun rahe hain. 
-       Jaise hi CSS animation khatam hogi, element automatically delete ho jayega. 
-       { once: true } ensures memory leak na ho. */
-    el.addEventListener('animationend', () => el.remove(), { once: true });
-}
+const toggleView = (isOpening) => {
+    UI.marketing.classList.toggle('hiddenView', isOpening);
+    UI.dashboard.classList.toggle('hiddenView', !isOpening);
+    if (isOpening) UI.dashboard.classList.add('fadeAndSlideIn');
+    window.scrollTo(0, 0);
+};
 
 /* ==========================================
-   3. CORE FINANCIAL LOGIC & UI UPDATES
+   4. CORE FINANCIAL MATH & DOM UPDATES
    ========================================== */
-function renderLedgerItemToDOM(txn) {
+const updateMetrics = () => {
+    const baseSalary = parseFloat(UI.salary.value) || 0;
+    const amounts = txns.map(t => t.amt);
+    
+    const inc = amounts.filter(a => a > 0).reduce((acc, val) => acc + val, 0) + baseSalary;
+    const exp = amounts.filter(a => a < 0).reduce((acc, val) => acc + val, 0);
+    const bal = amounts.reduce((acc, val) => acc + val, 0) + baseSalary;
+
+    UI.income.innerText = `+₹${inc.toFixed(2)}`;
+    UI.expense.innerText = `-₹${Math.abs(exp).toFixed(2)}`;
+    UI.balance.innerText = `${bal < 0 ? '-' : ''}₹${Math.abs(bal).toFixed(2)}`;
+};
+
+const renderItem = ({ desc, amt }) => {
     const li = document.createElement('li');
-    li.classList.add('ledgerItem', txn.transactionAmount > 0 ? 'incomeItem' : 'expenseItem');
-    
+    li.className = `ledgerItem ${amt > 0 ? 'incomeItem' : 'expenseItem'}`;
     li.innerHTML = `
         <div class="ledgerItemDetails">
-            <span class="ledgerItemDesc">${txn.transactionDescription}</span>
+            <span class="ledgerItemDesc">${desc}</span>
             <span class="ledgerItemDate">Just now</span>
         </div>
-        <span class="ledgerItemValue">${txn.transactionAmount > 0 ? '+' : '-'}$${Math.abs(txn.transactionAmount).toFixed(2)}</span>
+        <span class="ledgerItemValue">${amt > 0 ? '+' : '-'}₹${Math.abs(amt).toFixed(2)}</span>
     `;
-    transactionLedgerList.prepend(li); // .prepend() naye item ko list me sabse upar dalta hai
-}
+    UI.ledger.prepend(li); // Adds to top of list
+};
 
-function recalculateFinancialMetrics() {
-    const amounts = globalTransactionsArray.map(t => t.transactionAmount);
+const triggerAnimation = (amt) => {
+    const el = document.createElement('div');
+    el.className = `animatedMoneyFloat ${amt > 0 ? 'floatIncomeText' : 'floatExpenseText'}`;
+    el.textContent = `${amt > 0 ? '+' : '-'}₹${Math.abs(amt).toFixed(2)} ${amt > 0 ? '💵' : '💸'}`;
     
-    const income = amounts.filter(a => a > 0).reduce((acc, val) => acc + val, 0);
-    const expense = amounts.filter(a => a < 0).reduce((acc, val) => acc + val, 0);
-    const balance = amounts.reduce((acc, val) => acc + val, 0);
-
-    displayTotalIncome.innerText = `+$${income.toFixed(2)}`;
-    displayTotalExpense.innerText = `-$${Math.abs(expense).toFixed(2)}`;
-    displayMasterBalance.innerText = `${balance < 0 ? '-' : ''}$${Math.abs(balance).toFixed(2)}`;
-}
+    document.querySelector('.masterBalanceSection').appendChild(el);
+    el.addEventListener('animationend', () => el.remove(), { once: true });
+};
 
 /* ==========================================
-   4. FORM HANDLING
+   5. EVENT LISTENERS
    ========================================== */
-financialEntryForm.addEventListener('submit', (e) => {
-    e.preventDefault();
+// Navigation Events
+$('buttonLaunchDashboard').addEventListener('click', () => toggleView(true));
+$('navLaunchDashboard').addEventListener('click', () => toggleView(true));
+$('buttonCloseDashboard').addEventListener('click', () => toggleView(false));
 
-    const desc = inputTransactionDesc.value.trim();
-    const amt = parseFloat(inputTransactionAmt.value.trim());
+// Salary Input Event (Real-time update)
+UI.salary.addEventListener('input', () => { updateMetrics(); saveState(); });
+
+// Clear Data Event
+$('btnClearData').addEventListener('click', () => {
+    if (!confirm("Wipe all data? This cannot be undone.")) return;
+    localStorage.clear();
+    txns = [];
+    UI.salary.value = '';
+    UI.ledger.innerHTML = '';
+    updateMetrics();
+});
+
+// Form Submission Event
+UI.form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const desc = UI.desc.value.trim();
+    const amt = parseFloat(UI.amt.value.trim());
 
     if (!desc || isNaN(amt)) return alert("Please provide a valid description and amount.");
 
-    const newTxn = { transactionDescription: desc, transactionAmount: amt };
-    globalTransactionsArray.push(newTxn);
+    const newTxn = { desc, amt };
+    txns.push(newTxn);
 
-    renderLedgerItemToDOM(newTxn);
-    recalculateFinancialMetrics();
-    triggerMoneyAnimation(amt);
+    renderItem(newTxn);
+    updateMetrics();
+    triggerAnimation(amt);
+    saveState();
 
-    financialEntryForm.reset(); // manual value='' ki jagah native HTML reset method
-    inputTransactionDesc.focus();
+    UI.form.reset();
+    UI.desc.focus();
 });
+
+/* ==========================================
+   6. BOOTSTRAP (Initialize on Load)
+   ========================================== */
+txns.forEach(renderItem);
+updateMetrics();
