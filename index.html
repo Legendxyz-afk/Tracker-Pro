@@ -3,15 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enterprise Expense Tracker</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>TrackerPro | Enterprise Expense Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <main class="dashboardContainer">
+
+    <div id="marketingSiteWrapper">
         
+        <nav class="globalNavBar">
+            <div class="navContainer">
+                <div class="brandLogo">Tracker<span class="brandAccent">Pro</span></div>
+                <div class="navLinks">
+                    <a href="#sectionFeatures" class="navItem">Features</a>
+                    <a href="#sectionAbout" class="navItem">About Us</a>
+                    <a href="#sectionContact" class="navItem">Contact</a>
+                </div>
+                <button id="navLaunchDashboard" class="textButtonSecondary outlineButton">Login / Dashboard</button>
+            </div>
+        </nav>
+
+        <section class="heroSection">
+            <div class="landingContentBlock">
+                <div class="brandBadge">TrackerPro 1.0</div>
+                <h1 class="heroHeadline">Master Your Finances with <span class="textHighlight">Precision.</span></h1>
+                <p class="heroSubtext">Experience an enterprise-grade, blazing fast expense tracking dashboard designed for maximum clarity and minimal cognitive load.</p>
+                <button id="buttonLaunchDashboard" class="primaryCTAButton">
+                    Open Dashboard <span class="arrowIcon">→</span>
+                </button>
+            </div>
+        </section>
+
+        <section id="sectionFeatures" class="marketingSection sectionAlternateBg">
+            <div class="sectionContainer">
+                <h2 class="sectionTitleCenter">Why TrackerPro is Better</h2>
+                <p class="sectionSubtitleCenter">Built on first principles for speed, security, and simplicity.</p>
+                
+                <div class="featuresGrid">
+                    <div class="featureCard">
+                        <div class="featureIcon">⚡</div>
+                        <h3 class="featureTitle">Blazing Fast SPA</h3>
+                        <p class="featureText">No page reloads. Our Single Page Architecture ensures your financial data updates in absolute real-time.</p>
+                    </div>
+                    <div class="featureCard">
+                        <div class="featureIcon">🔒</div>
+                        <h3 class="featureTitle">Local First Security</h3>
+                        <p class="featureText">Your data never leaves your device. Everything is processed and stored locally for ultimate privacy.</p>
+                    </div>
+                    <div class="featureCard">
+                        <div class="featureIcon">🧠</div>
+                        <h3 class="featureTitle">Zero Cognitive Load</h3>
+                        <p class="featureText">No cluttered graphs or confusing menus. Just the pure data you need to make fast financial decisions.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="sectionAbout" class="marketingSection">
+            <div class="sectionContainer splitLayout">
+                <div class="splitTextContent">
+                    <h2 class="sectionTitleLeft">Our History & Mission</h2>
+                    <p class="paragraphText">TrackerPro was born out of frustration with bloated, ad-filled finance apps. We started as a simple engineering experiment to build the fastest, cleanest expense ledger possible.</p>
+                    <p class="paragraphText">Our mission is simple: provide professionals with industrial-grade financial tools that respect their time and privacy. We believe in high-contrast design, clean architecture, and giving you absolute control over your financial narrative.</p>
+                </div>
+                <div class="splitImageContent">
+                    <div class="imagePlaceholder">Building a better financial future.</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="sectionContact" class="marketingSection sectionAlternateBg">
+            <div class="sectionContainer contactLayout">
+                <h2 class="sectionTitleCenter">Get in Touch</h2>
+                <p class="sectionSubtitleCenter">Have a feature request or need enterprise deployment? Let's talk.</p>
+                
+                <form class="contactForm" id="contactForm">
+                    <div class="inputWrapper">
+                        <label class="inputLabel">Name</label>
+                        <input type="text" class="cleanInput" placeholder="John Doe" required>
+                    </div>
+                    <div class="inputWrapper">
+                        <label class="inputLabel">Email</label>
+                        <input type="email" class="cleanInput" placeholder="john@company.com" required>
+                    </div>
+                    <div class="inputWrapper">
+                        <label class="inputLabel">Message</label>
+                        <textarea class="cleanInput textArea" rows="4" placeholder="How can we help you?" required></textarea>
+                    </div>
+                    <button type="submit" class="primaryCTAButton fullWidth">Send Message</button>
+                </form>
+            </div>
+        </section>
+
+        <footer class="globalFooter">
+            <p>&copy; 2026 TrackerPro. All rights reserved. Engineered with precision.</p>
+        </footer>
+
+    </div>
+
+    <main id="appDashboardWrapper" class="dashboardContainer hiddenView">
         <header class="dashboardHeader">
-            <h1 class="brandTitle">Tracker<span class="brandAccent">Pro</span></h1>
+            <div class="headerTopRow">
+                <h1 class="brandTitle">Tracker<span class="brandAccent">Pro</span></h1>
+                <button id="buttonCloseDashboard" class="textButtonSecondary">← Exit to Site</button>
+            </div>
             <p class="brandSubtitle">Financial Overview</p>
         </header>
 
@@ -39,18 +134,15 @@
 
         <section class="transactionEntrySection">
             <h3 class="sectionTitle">Record Transaction</h3>
-            
             <form id="financialEntryForm" class="entryForm">
                 <div class="inputWrapper">
                     <label for="inputTransactionDesc" class="inputLabel">Description</label>
                     <input type="text" id="inputTransactionDesc" class="cleanInput" placeholder="e.g., Client Dinner, AWS Hosting" autocomplete="off" required>
                 </div>
-                
                 <div class="inputWrapper">
                     <label for="inputTransactionAmt" class="inputLabel">Amount <span class="labelHint">(Use '-' for expenses)</span></label>
                     <input type="number" id="inputTransactionAmt" class="cleanInput" placeholder="e.g., -150.00" step="0.01" required>
                 </div>
-                
                 <button type="submit" class="actionButtonPrimary">Save Transaction</button>
             </form>
         </section>
@@ -58,14 +150,11 @@
         <section class="transactionLedgerSection">
             <div class="sectionHeaderWithAction">
                 <h3 class="sectionTitle">Recent Activity</h3>
-                <button class="textButtonSecondary" id="btnExportData">Export</button>
             </div>
-            
-            <ul class="ledgerList" id="transactionLedgerList">
-                </ul>
+            <ul class="ledgerList" id="transactionLedgerList"></ul>
         </section>
-
     </main>
+
     <script src="script.js"></script>
 </body>
 </html>

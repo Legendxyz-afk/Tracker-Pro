@@ -303,7 +303,313 @@ body {
     color: var(--color-expense);
     animation: floatDownwardsFadeOut 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
+/* Utility class to hard-hide views from the DOM rendering engine */
+.hiddenView {
+    display: none !important;
+}
 
+/* Smooth fade-in animation jab view change ho taaki sudden jhatka na lage */
+.fadeAndSlideIn {
+    animation: entranceAnimation 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes entranceAnimation {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Landing Page Layout */
+.landingPageContainer {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg-page);
+    padding: 20px;
+    text-align: center;
+}
+
+.landingContentBlock {
+    max-width: 600px;
+}
+
+.brandBadge {
+    display: inline-block;
+    background-color: rgba(16, 185, 129, 0.1);
+    color: var(--color-brand-button);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 24px;
+}
+
+.heroHeadline {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--color-brand-primary);
+    line-height: 1.1;
+    margin-bottom: 16px;
+    letter-spacing: -1px;
+}
+
+.textHighlight {
+    color: var(--color-brand-button);
+}
+
+.heroSubtext {
+    font-size: 1.125rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 40px;
+    line-height: 1.6;
+}
+
+/* Call to Action Button */
+.primaryCTAButton {
+    background-color: var(--color-brand-primary);
+    color: white;
+    border: none;
+    padding: 16px 32px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 10px 15px -3px rgba(0, 45, 64, 0.2);
+}
+
+.primaryCTAButton:hover {
+    background-color: #001f2e;
+    transform: translateY(-2px);
+    box-shadow: 0 20px 25px -5px rgba(0, 45, 64, 0.3);
+}
+
+.arrowIcon {
+    transition: transform 0.3s ease;
+}
+
+.primaryCTAButton:hover .arrowIcon {
+    transform: translateX(4px); /* Hover par arrow aage move karta hai */
+}
+
+/* Dashboard Header Row adjust kar rahe hain taaki exit button fit ho sake */
+.headerTopRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.globalNavBar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px); /* Apple-style frosted glass effect */
+    border-bottom: 1px solid var(--color-border);
+    z-index: 1000;
+    padding: 16px 0;
+}
+
+.navContainer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brandLogo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--color-brand-primary);
+}
+
+.navLinks {
+    display: flex;
+    gap: 32px;
+}
+
+.navItem {
+    text-decoration: none;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+}
+
+.navItem:hover {
+    color: var(--color-brand-primary);
+}
+
+.outlineButton {
+    border: 2px solid var(--color-border);
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    color: var(--color-text-primary);
+}
+
+.outlineButton:hover {
+    border-color: var(--color-brand-button);
+    text-decoration: none;
+}
+
+/* Marketing Sections Generic Structure */
+.marketingSection {
+    padding: 100px 24px; /* Generous breathing room */
+}
+
+.sectionAlternateBg {
+    background-color: #ffffff;
+}
+
+.sectionContainer {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.sectionTitleCenter {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--color-brand-primary);
+    margin-bottom: 16px;
+    letter-spacing: -0.5px;
+}
+
+.sectionSubtitleCenter {
+    text-align: center;
+    font-size: 1.125rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 64px;
+}
+
+/* Features Grid */
+.featuresGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 32px;
+}
+
+.featureCard {
+    background: var(--bg-page);
+    padding: 32px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.featureCard:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.featureIcon {
+    font-size: 2.5rem;
+    margin-bottom: 16px;
+}
+
+.featureTitle {
+    font-size: 1.25rem;
+    margin-bottom: 12px;
+    color: var(--color-brand-primary);
+}
+
+.featureText {
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+}
+
+/* About Us Split Layout */
+.splitLayout {
+    display: flex;
+    align-items: center;
+    gap: 64px;
+}
+
+.splitTextContent, .splitImageContent {
+    flex: 1;
+}
+
+.sectionTitleLeft {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 24px;
+    color: var(--color-brand-primary);
+}
+
+.paragraphText {
+    font-size: 1.125rem;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    margin-bottom: 16px;
+}
+
+.imagePlaceholder {
+    background: linear-gradient(135deg, var(--color-brand-primary), var(--color-brand-button));
+    height: 400px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 1.25rem;
+    box-shadow: var(--shadow-md);
+}
+
+/* Contact Form Specifics */
+.contactLayout {
+    max-width: 600px; /* Keep form narrow for readability */
+}
+
+.contactForm {
+    background: var(--bg-page);
+    padding: 40px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+}
+
+.textArea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.fullWidth {
+    width: 100%;
+    margin-top: 16px;
+}
+
+/* Footer */
+.globalFooter {
+    text-align: center;
+    padding: 40px 24px;
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    border-top: 1px solid var(--color-border);
+    background-color: var(--bg-page);
+}
+
+/* Make sure Hero Section respects the sticky navbar */
+.heroSection {
+    margin-top: 80px; 
+    min-height: calc(100vh - 80px); /* Full screen minus nav bar */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/* Responsive fixes for mobile */
+@media (max-width: 768px) {
+    .navLinks { display: none; } /* Hide text links on very small screens */
+    .splitLayout { flex-direction: column; }
+    .heroHeadline { font-size: 2.5rem; }
+}
 /* @keyframes define karte hain animation ka start (0%) aur end (100%).
    Yahan translateY() vertically move kar raha hai, aur opacity fade out kar rahi hai.
 */
