@@ -19,6 +19,9 @@
                     <a href="#sectionContact" class="navItem">Contact</a>
                 </div>
                 <button id="navLaunchDashboard" class="textButtonSecondary outlineButton">Login / Dashboard</button>
+                <button class="mobileMenuBtn" id="mobileNavToggle" aria-label="Toggle menu">
+                    <span></span><span></span><span></span>
+                </button>
             </div>
         </nav>
 
@@ -96,8 +99,17 @@
     </div>
 
     <main id="appDashboardWrapper" class="dashboardLayout hiddenView">
-        
-        <aside class="dashSidebar">
+
+        <div class="mobileDashHeader" id="mobileDashHeader">
+            <div class="brandLogo">Tracker<span class="brandAccent">Pro</span></div>
+            <button class="mobileHamburger" id="mobileSidebarToggle" aria-label="Open menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+
+        <div class="sidebarOverlay" id="sidebarOverlay"></div>
+
+        <aside class="dashSidebar" id="dashSidebar">
             <div class="sidebarHeader">
                 <div class="brandLogo">Tracker<span class="brandAccent">Pro</span></div>
             </div>

@@ -378,3 +378,43 @@ uiElements.financialEntryForm.addEventListener('submit', (event) => {
    
 calculateAndUpdateFinancialMetrics();
 renderTransactionLedgerToDOM();
+
+
+/* ==========================================
+   8. MOBILE SIDEBAR TOGGLE
+   ========================================== */
+
+const sidebarOverlay = getDOMElement('sidebarOverlay');
+const dashSidebar = getDOMElement('dashSidebar');
+
+const openSidebar = () => {
+    dashSidebar.classList.add('open');
+    sidebarOverlay.classList.add('active');
+};
+
+const closeSidebar = () => {
+    dashSidebar.classList.remove('open');
+    sidebarOverlay.classList.remove('active');
+};
+
+getDOMElement('mobileSidebarToggle').addEventListener('click', openSidebar);
+sidebarOverlay.addEventListener('click', closeSidebar);
+getDOMElement('buttonCloseDashboard').addEventListener('click', closeSidebar);
+
+/* ==========================================
+   9. MOBILE NAV MENU TOGGLE
+   ========================================== */
+
+const mobileNavToggle = getDOMElement('mobileNavToggle');
+const navLinks = document.querySelector('.navLinks');
+
+mobileNavToggle.addEventListener('click', () => {
+    navLinks.classList.toggle('navOpen');
+});
+
+// Close nav when a link is clicked
+navLinks.querySelectorAll('.navItem').forEach(link => {
+    link.addEventListener('click', () => {
+        navLinks.classList.remove('navOpen');
+    });
+});
