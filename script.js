@@ -390,11 +390,13 @@ const dashSidebar = getDOMElement('dashSidebar');
 const openSidebar = () => {
     dashSidebar.classList.add('open');
     sidebarOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
 };
 
 const closeSidebar = () => {
     dashSidebar.classList.remove('open');
     sidebarOverlay.classList.remove('active');
+    document.body.style.overflow = '';
 };
 
 getDOMElement('mobileSidebarToggle').addEventListener('click', openSidebar);
