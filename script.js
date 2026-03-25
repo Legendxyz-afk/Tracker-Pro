@@ -14,7 +14,7 @@ const UI = {
     form: $('financialEntryForm'),
     desc: $('inputTransactionDesc'),
     amt: $('inputTransactionAmt'),
-    category: $('inputCategory'),
+    // Note: removed `category` from here as we now have two separate ones
     salary: $('inputBaseSalary'),
     budget: $('inputMonthlyBudget'),
     search: $('searchTransactions'),
@@ -123,7 +123,7 @@ const updateMetrics = () => {
 };
 
 const getCategoryIcon = (cat) => {
-    const icons = { 'Food': '🍔', 'Transport': '🚗', 'Utilities': '⚡', 'Shopping': '🛍️', 'Salary': '💰', 'Other': '📌' };
+    const icons = { 'Food': '🍔', 'Transport': '🚗', 'Utilities': '⚡', 'Shopping': '🛍️', 'Salary': '💰', 'Freelance': '💻', 'Investments': '📈', 'Refund': '🔄', 'Other': '📌' };
     return icons[cat] || '📌';
 };
 
@@ -196,11 +196,13 @@ UI.form.addEventListener('submit', (e) => {
     
     const desc = UI.desc.value.trim();
     const rawAmt = Math.abs(parseFloat(UI.amt.value.trim()));
-    const cat = UI.category.value;
+    
+    // NAYA LOGIC: Read from the correct dropdown based on the active CSS Radio State
+    const selectedType = document.querySelector('input[name="transactionType"]:checked').value;
+    const cat = selectedType === 'expense' ? $('inputCategoryExpense').value : $('inputCategoryIncome').value;
 
     if (!desc || isNaN(rawAmt)) return alert("Please provide a valid description and amount.");
 
-    const selectedType = document.querySelector('input[name="transactionType"]:checked').value;
     const finalAmount = selectedType === 'expense' ? -rawAmt : rawAmt;
 
     txns.push({ id: Date.now(), desc, amt: finalAmount, cat });

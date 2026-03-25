@@ -180,21 +180,32 @@
                     <h3 class="sectionTitle">Record Transaction</h3>
                     <form id="financialEntryForm" class="entryForm enterpriseForm">
                         
+                        <input type="radio" id="typeExpense" name="transactionType" value="expense" checked class="hiddenRadio">
+                        <input type="radio" id="typeIncome" name="transactionType" value="income" class="hiddenRadio">
+
                         <div class="transactionTypeSelector">
-                            <input type="radio" id="typeExpense" name="transactionType" value="expense" checked class="hiddenRadio">
                             <label for="typeExpense" class="toggleLabel">Expense</label>
-                            <input type="radio" id="typeIncome" name="transactionType" value="income" class="hiddenRadio">
                             <label for="typeIncome" class="toggleLabel">Income</label>
                         </div>
 
-                        <div class="inputWrapper">
-                            <label class="inputLabel">Category</label>
-                            <select id="inputCategory" class="cleanInput" required>
+                        <div class="inputWrapper expenseCategoryGroup">
+                            <label class="inputLabel">Expense Category</label>
+                            <select id="inputCategoryExpense" class="cleanInput">
                                 <option value="Food">🍔 Food & Dining</option>
                                 <option value="Transport">🚗 Transport</option>
                                 <option value="Utilities">⚡ Utilities</option>
                                 <option value="Shopping">🛍️ Shopping</option>
+                                <option value="Other">📌 Other</option>
+                            </select>
+                        </div>
+
+                        <div class="inputWrapper incomeCategoryGroup">
+                            <label class="inputLabel">Income Category</label>
+                            <select id="inputCategoryIncome" class="cleanInput">
                                 <option value="Salary">💰 Salary/Income</option>
+                                <option value="Freelance">💻 Freelance</option>
+                                <option value="Investments">📈 Investments</option>
+                                <option value="Refund">🔄 Refund</option>
                                 <option value="Other">📌 Other</option>
                             </select>
                         </div>

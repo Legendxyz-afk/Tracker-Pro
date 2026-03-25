@@ -1,3 +1,6 @@
+/* ==========================================
+   ENTERPRISE DESIGN SYSTEM (Variables)
+   ========================================== */
 :root {
     --bg-page: #F8FAFC; 
     --bg-surface: #FFFFFF;
@@ -87,7 +90,6 @@ body {
 .bmwInput::placeholder { color: #555555; }
 .bmwInput:focus { border-bottom-color: var(--color-brand-button); }
 
-/* Sharp, precise button styling */
 .bmwSubmitBtn { background: transparent; border: 1px solid white; color: white; padding: 18px 36px; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: 16px; width: max-content;}
 .bmwSubmitBtn:hover { background: white; color: black; }
 
@@ -120,7 +122,6 @@ body {
 .dashSidebar .brandLogo { color: white; margin-bottom: 32px; }
 .dashSidebar .brandAccent { color: #3B82F6; }
 
-/* FIX: Seamless Editable Profile */
 .userProfileCard { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.05); padding: 16px; border-radius: var(--radius-md); margin-bottom: 32px; }
 .userAvatar { width: 40px; height: 40px; background: #3B82F6; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; }
 .userInfo { flex: 1; display: flex; flex-direction: column; }
@@ -151,7 +152,6 @@ body {
 .widgetBox { margin-bottom: 16px; }
 .widgetBox .inputLabel { color: var(--color-text-sidebar); }
 
-/* FIX: Absolute clarity on Sidebar Inputs */
 .sidebarInput { 
     background-color: #FFFFFF !important; 
     color: #0F172A !important; 
@@ -203,12 +203,27 @@ body {
 .actionButtonPrimary:hover { background: var(--color-brand-button-hover); }
 .smallBtn { padding: 10px; font-size: 0.875rem; margin-top: 8px; }
 
-/* Toggles */
-.transactionTypeSelector { display: flex; background: #F1F5F9; padding: 4px; border-radius: 8px; margin-bottom: 20px; }
+/* ==========================================
+   CSS-ONLY UI TOGGLES & DROPDOWNS
+   ========================================== */
 .hiddenRadio { display: none; }
+.transactionTypeSelector { display: flex; background: #F1F5F9; padding: 4px; border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--color-border); }
 .toggleLabel { flex: 1; text-align: center; padding: 8px; font-size: 0.875rem; font-weight: 600; color: var(--color-text-secondary); border-radius: 6px; cursor: pointer; transition: 0.2s; }
-#typeExpense:checked + .toggleLabel { background: white; color: var(--color-expense); box-shadow: var(--shadow-sm); }
-#typeIncome:checked + .toggleLabel { background: white; color: var(--color-income); box-shadow: var(--shadow-sm); }
+
+/* Highlight active toggle pill */
+#typeExpense:checked ~ .transactionTypeSelector label[for="typeExpense"] {
+    background: white; color: var(--color-expense); box-shadow: var(--shadow-sm);
+}
+#typeIncome:checked ~ .transactionTypeSelector label[for="typeIncome"] {
+    background: white; color: var(--color-income); box-shadow: var(--shadow-sm);
+}
+
+/* Hide/Show Dropdowns natively with CSS */
+.incomeCategoryGroup { display: none; } /* Hidden initially */
+#typeExpense:checked ~ .expenseCategoryGroup { display: block; }
+#typeExpense:checked ~ .incomeCategoryGroup { display: none; }
+#typeIncome:checked ~ .expenseCategoryGroup { display: none; }
+#typeIncome:checked ~ .incomeCategoryGroup { display: block; }
 
 /* Ledger */
 .fullHeightScroll { flex: 1; overflow-y: auto; max-height: 500px; padding-right: 8px; }
