@@ -1075,9 +1075,16 @@ body {
         justify-content: space-between;
         background: var(--bg-sidebar);
         padding: 16px;
-        position: sticky;
+        position: fixed;
         top: 0;
+        left: 0;
+        right: 0;
         z-index: 50;
+    }
+
+    /* Push content down so it doesn't hide under the fixed bar */
+    .dashMainContent {
+        padding-top: 72px;
     }
 
     .mobileDashHeader .brandLogo {
