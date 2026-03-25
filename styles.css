@@ -61,7 +61,7 @@ body {
     backdrop-filter: blur(10px); 
     border-bottom: 1px solid var(--color-border); 
     z-index: 1000; 
-    padding: 16px 0; 
+    padding: 16px 0;
 }
 
 .navContainer { 
@@ -898,4 +898,300 @@ body {
 .deleteBtn:hover { 
     color: var(--color-expense); 
     background: #FEE2E2; 
+}
+
+
+/* ==========================================
+   MOBILE RESPONSIVE STYLES
+   ========================================== */
+
+/* Hamburger menu button (hidden on desktop) */
+.mobileMenuBtn {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    flex-direction: column;
+    gap: 5px;
+    padding: 4px;
+}
+
+.mobileMenuBtn span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--color-brand-primary);
+    border-radius: 2px;
+    transition: 0.3s;
+}
+
+/* Mobile sidebar overlay */
+.sidebarOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 99;
+}
+
+/* Mobile dashboard top bar - hidden by default, shown via media query */
+.mobileDashHeader {
+    display: none;
+}
+
+.sidebarOverlay.active {
+    display: block;
+}
+
+@media (max-width: 768px) {
+
+    /* --- NAV --- */
+    .navLinks {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        flex-direction: column;
+        padding: 16px 24px;
+        gap: 16px;
+        border-bottom: 1px solid var(--color-border);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .navLinks.navOpen {
+        display: flex;
+    }
+
+    .mobileMenuBtn {
+        display: flex;
+    }
+
+    .navContainer {
+        padding: 0 16px;
+    }
+
+    /* --- HERO --- */
+    .heroHeadline {
+        font-size: 2.2rem;
+        letter-spacing: -0.5px;
+    }
+
+    .heroSubtext {
+        font-size: 1rem;
+    }
+
+    .landingContentBlock {
+        padding: 0 16px;
+    }
+
+    .primaryCTAButton {
+        font-size: 1rem;
+        padding: 14px 24px;
+    }
+
+    /* --- MARKETING SECTIONS --- */
+    .marketingSection {
+        padding: 60px 16px;
+    }
+
+    .sectionTitleCenter {
+        font-size: 1.75rem;
+    }
+
+    .featuresGrid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .featureCard {
+        padding: 24px;
+    }
+
+    .splitLayout {
+        flex-direction: column;
+        gap: 32px;
+    }
+
+    .sectionTitleLeft {
+        font-size: 1.75rem;
+    }
+
+    .paragraphText {
+        font-size: 1rem;
+    }
+
+    .imagePlaceholder {
+        height: 200px;
+        font-size: 1rem;
+    }
+
+    /* --- CONTACT SECTION --- */
+    .bmwContactSection {
+        padding: 60px 16px;
+    }
+
+    .bmwContactWrapper {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .bmwTitle {
+        font-size: 2rem;
+    }
+
+    .bmwSub {
+        font-size: 1rem;
+    }
+
+    /* --- DASHBOARD LAYOUT --- */
+    .dashboardLayout {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+        overflow: auto;
+    }
+
+    /* Sidebar becomes a slide-in drawer */
+    .dashSidebar {
+        position: fixed;
+        top: 0;
+        left: -280px;
+        height: 100vh;
+        z-index: 100;
+        transition: left 0.3s ease;
+        overflow-y: auto;
+    }
+
+    .dashSidebar.open {
+        left: 0;
+    }
+
+    /* Mobile top bar for dashboard */
+    .mobileDashHeader {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--bg-sidebar);
+        padding: 16px;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+    }
+
+    .mobileDashHeader .brandLogo {
+        color: white;
+        font-size: 1.25rem;
+    }
+
+    .mobileDashHeader .brandAccent {
+        color: #3B82F6;
+    }
+
+    .mobileHamburger {
+        background: none;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        padding: 4px;
+    }
+
+    .mobileHamburger span {
+        display: block;
+        width: 24px;
+        height: 2px;
+        background: white;
+        border-radius: 2px;
+    }
+
+    /* Main content full width */
+    .dashMainContent {
+        padding: 20px 16px;
+        width: 100%;
+    }
+
+    /* Header stacks vertically */
+    .mainHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+
+    .greetingText {
+        font-size: 1.5rem;
+    }
+
+    .headerControls {
+        width: 100%;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .searchInput {
+        min-width: unset;
+        width: 100%;
+    }
+
+    .dangerOutlineBtn {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Metrics: 2 columns on mobile */
+    .metricsQuadGrid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .metricCard {
+        padding: 16px;
+    }
+
+    .metricAmount {
+        font-size: 1.25rem;
+    }
+
+    /* Analytics bar */
+    .analyticsSection {
+        margin-bottom: 20px;
+    }
+
+    /* Split layout stacks vertically */
+    .dashboardSplitLayout {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .fullHeightScroll {
+        max-height: 350px;
+    }
+
+    /* Ledger items more compact */
+    .ledgerItem {
+        gap: 10px;
+        padding: 12px 8px;
+    }
+
+    .ledgerItemValue {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .heroHeadline {
+        font-size: 1.8rem;
+    }
+
+    .metricsQuadGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .metricAmount {
+        font-size: 1.5rem;
+    }
 }
