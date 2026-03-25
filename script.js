@@ -1,222 +1,380 @@
 /* ==========================================
-   1. UTILITIES & DOM MAPPING
+   1. UTILITIES & DOM MAPPING (Skeleton)
    ========================================== */
-const $ = (id) => document.getElementById(id);
 
-const UI = {
-    marketing: $('marketingSiteWrapper'),
-    dashboard: $('appDashboardWrapper'),
-    balance: $('displayMasterBalance'),
-    income: $('displayTotalIncome'),
-    expense: $('displayTotalExpense'),
-    remaining: $('displayRemainingBudget'),
-    ledger: $('transactionLedgerList'),
-    form: $('financialEntryForm'),
-    desc: $('inputTransactionDesc'),
-    amt: $('inputTransactionAmt'),
-    // Note: removed `category` from here as we now have two separate ones
-    salary: $('inputBaseSalary'),
-    budget: $('inputMonthlyBudget'),
-    search: $('searchTransactions'),
-    ratioBar: $('expenseVisualBar'),
-    ratioText: $('expenseRatioText'),
-    greeting: $('greetingMessage'),
-    dateDisplay: $('currentDateDisplay'),
-    profileName: $('userProfileName'),
-    avatarText: $('userAvatarText')
+/* Ye ek chota helper function hai. Baar-baar 'document.getElementById' 
+  likhne ki jagah hum sirf 'getDOMElement(id)' likh sakte hain.
+*/
+const getDOMElement = (elementId) => {
+    return document.getElementById(elementId);
 };
 
-const formatINR = (amount) => {
+/* Saare HTML elements ko ek single 'uiElements' object me group kiya hai.
+  Isse global space clean rehti hai aur pata rehta hai ki hum UI se baat kar rahe hain.
+*/
+const uiElements = {
+    marketingSiteWrapper: getDOMElement('marketingSiteWrapper'),
+    dashboardWrapper: getDOMElement('appDashboardWrapper'),
+    
+    displayMasterBalance: getDOMElement('displayMasterBalance'),
+    displayTotalIncome: getDOMElement('displayTotalIncome'),
+    displayTotalExpense: getDOMElement('displayTotalExpense'),
+    displayRemainingBudget: getDOMElement('displayRemainingBudget'),
+    
+    transactionLedgerList: getDOMElement('transactionLedgerList'),
+    financialEntryForm: getDOMElement('financialEntryForm'),
+    
+    inputTransactionDesc: getDOMElement('inputTransactionDesc'),
+    inputTransactionAmt: getDOMElement('inputTransactionAmt'),
+    inputBaseSalary: getDOMElement('inputBaseSalary'),
+    inputMonthlyBudget: getDOMElement('inputMonthlyBudget'),
+    searchTransactions: getDOMElement('searchTransactions'),
+    
+    expenseVisualBar: getDOMElement('expenseVisualBar'),
+    expenseRatioText: getDOMElement('expenseRatioText'),
+    
+    greetingMessage: getDOMElement('greetingMessage'),
+    currentDateDisplay: getDOMElement('currentDateDisplay'),
+    userProfileName: getDOMElement('userProfileName'),
+    userAvatarText: getDOMElement('userAvatarText')
+};
+
+/* Ye browser ka native API hai jo normal numbers ko Indian Rupees (₹) 
+  format me convert karta hai (e.g., 150000 -> ₹1,50,000.00).
+*/
+const formatIndianRupee = (rawAmount) => {
     return new Intl.NumberFormat('en-IN', {
         style: 'currency',
         currency: 'INR',
         minimumFractionDigits: 2
-    }).format(amount);
+    }).format(rawAmount);
 };
+
 
 /* ==========================================
-   2. STATE MANAGEMENT & LOCAL STORAGE
+   2. STATE MANAGEMENT & LOCAL STORAGE (Memory)
    ========================================== */
-let txns = JSON.parse(localStorage.getItem('trackerPro_txns')) || [];
-let userName = localStorage.getItem('trackerPro_userName') || 'Ghost';
 
-// Initialize Inputs and Profile
-UI.salary.value = localStorage.getItem('trackerPro_salary') || '';
-UI.budget.value = localStorage.getItem('trackerPro_budget') || '';
-UI.profileName.value = userName;
-UI.avatarText.innerText = userName.charAt(0).toUpperCase();
+/* Page load hote hi browser memory (localStorage) check karte hain. 
+  Agar data hai toh usko JSON.parse se array me badal lo, warna empty array [] use karo.
+*/
+let globalTransactionHistoryArray = JSON.parse(localStorage.getItem('trackerPro_txns')) || [];
+let savedUserName = localStorage.getItem('trackerPro_userName') || 'Ghost';
 
-const saveState = () => {
-    localStorage.setItem('trackerPro_txns', JSON.stringify(txns));
-    localStorage.setItem('trackerPro_salary', UI.salary.value);
-    localStorage.setItem('trackerPro_budget', UI.budget.value);
+// Sidebar inputs aur profile name me saved values daal do
+uiElements.inputBaseSalary.value = localStorage.getItem('trackerPro_salary') || '';
+uiElements.inputMonthlyBudget.value = localStorage.getItem('trackerPro_budget') || '';
+uiElements.userProfileName.value = savedUserName;
+
+// Avatar text ke liye user ke naam ka pehla letter (charAt(0)) capital karke set kar rahe hain
+uiElements.userAvatarText.innerText = savedUserName.charAt(0).toUpperCase();
+
+/* Jab bhi koi naya transaction ya naam change ho, ye function saara data 
+  wapas browser ki memory me save kar deta hai taaki refresh karne par data ude nahi.
+*/
+const saveApplicationStateToLocalStorage = () => {
+    localStorage.setItem('trackerPro_txns', JSON.stringify(globalTransactionHistoryArray));
+    localStorage.setItem('trackerPro_salary', uiElements.inputBaseSalary.value);
+    localStorage.setItem('trackerPro_budget', uiElements.inputMonthlyBudget.value);
 };
+
 
 /* ==========================================
    3. PROFILE EDITING & DYNAMIC GREETING
    ========================================== */
-const updateGreeting = () => {
-    const hour = new Date().getHours();
-    let greet = "Good Evening";
-    if (hour < 12) greet = "Good Morning";
-    else if (hour < 17) greet = "Good Afternoon";
+
+const updateDynamicGreetingAndDate = () => {
+    // Current time check karke dynamic greeting set kar rahe hain
+    const currentHour = new Date().getHours();
+    let dynamicGreeting = "Good Evening";
     
-    UI.greeting.innerText = `${greet}, ${userName}`;
-    UI.dateDisplay.innerText = new Date().toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-};
-
-// When user types a new name, save it instantly
-UI.profileName.addEventListener('input', (e) => {
-    const newName = e.target.value.trim() || 'User';
-    userName = newName;
-    UI.avatarText.innerText = newName.charAt(0).toUpperCase();
-    localStorage.setItem('trackerPro_userName', newName);
-    updateGreeting();
-});
-
-// Remove focus when they hit enter
-UI.profileName.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        UI.profileName.blur(); 
+    if (currentHour < 12) {
+        dynamicGreeting = "Good Morning";
+    } else if (currentHour < 17) {
+        dynamicGreeting = "Good Afternoon";
     }
-});
-
-
-/* ==========================================
-   4. SPA ROUTING
-   ========================================== */
-const toggleView = (isOpening) => {
-    UI.marketing.classList.toggle('hiddenView', isOpening);
-    UI.dashboard.classList.toggle('hiddenView', !isOpening);
-    if (isOpening) updateGreeting();
-};
-
-
-/* ==========================================
-   5. CORE FINANCIAL MATH & DOM UPDATES
-   ========================================== */
-const updateMetrics = () => {
-    const budget = parseFloat(UI.budget.value) || 0;
     
-    const inc = txns.filter(t => t.amt > 0).reduce((acc, val) => acc + val.amt, 0);
-    const exp = txns.filter(t => t.amt < 0).reduce((acc, val) => acc + val.amt, 0);
-    const bal = inc + exp; 
-
-    UI.income.innerText = `+${formatINR(inc).replace('₹', '₹ ')}`;
-    UI.expense.innerText = `-${formatINR(Math.abs(exp)).replace('₹', '₹ ')}`;
-    UI.balance.innerText = formatINR(bal).replace('₹', '₹ ');
+    uiElements.greetingMessage.innerText = `${dynamicGreeting}, ${savedUserName}`;
     
-    const remaining = budget - Math.abs(exp);
-    UI.remaining.innerText = formatINR(remaining).replace('₹', '₹ ');
-    UI.remaining.style.color = remaining < 0 ? 'var(--color-expense)' : 'var(--color-text-primary)';
-
-    if (inc > 0) {
-        let ratio = Math.min((Math.abs(exp) / inc) * 100, 100);
-        UI.ratioBar.style.width = `${ratio}%`;
-        UI.ratioText.innerText = `${ratio.toFixed(1)}% of Income Spent`;
-        UI.ratioBar.style.background = ratio > 80 ? 'var(--color-expense)' : '#F59E0B'; 
-    } else {
-        UI.ratioBar.style.width = `0%`;
-        UI.ratioText.innerText = `0%`;
-    }
-};
-
-const getCategoryIcon = (cat) => {
-    const icons = { 'Food': '🍔', 'Transport': '🚗', 'Utilities': '⚡', 'Shopping': '🛍️', 'Salary': '💰', 'Freelance': '💻', 'Investments': '📈', 'Refund': '🔄', 'Other': '📌' };
-    return icons[cat] || '📌';
-};
-
-const renderLedger = (filterText = '') => {
-    UI.ledger.innerHTML = ''; 
-    
-    const filteredTxns = txns.filter(t => 
-        t.desc.toLowerCase().includes(filterText.toLowerCase()) || 
-        t.cat.toLowerCase().includes(filterText.toLowerCase())
-    );
-
-    filteredTxns.sort((a, b) => b.id - a.id).forEach(t => {
-        const li = document.createElement('li');
-        li.className = `ledgerItem ${t.amt > 0 ? 'incomeItem' : 'expenseItem'}`;
-        
-        const dateStr = new Date(t.id).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
-        
-        li.innerHTML = `
-            <div class="catIcon">${getCategoryIcon(t.cat)}</div>
-            <div class="ledgerItemDetails">
-                <span class="ledgerItemDesc">${t.desc}</span>
-                <span class="ledgerItemDate">${t.cat} • ${dateStr}</span>
-            </div>
-            <span class="ledgerItemValue">${t.amt > 0 ? '+' : '-'}${formatINR(Math.abs(t.amt))}</span>
-            <button class="deleteBtn" onclick="deleteTransaction(${t.id})">🗑️</button>
-        `;
-        UI.ledger.appendChild(li);
+    // Date ko clean readable format me dikha rahe hain
+    uiElements.currentDateDisplay.innerText = new Date().toLocaleDateString('en-IN', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
     });
 };
 
-window.deleteTransaction = (id) => {
-    txns = txns.filter(t => t.id !== id);
-    saveState();
-    updateMetrics();
-    renderLedger(UI.search.value);
+/* Jab user apna naam type karta hai, ye function live update karta hai */
+uiElements.userProfileName.addEventListener('input', (event) => {
+    const typedName = event.target.value.trim() || 'User';
+    savedUserName = typedName; // Global variable update kiya
+    
+    uiElements.userAvatarText.innerText = typedName.charAt(0).toUpperCase(); // Avatar update kiya
+    localStorage.setItem('trackerPro_userName', typedName); // Memory me save kiya
+    updateDynamicGreetingAndDate(); // Header update kiya
+});
+
+/* Enter key dabane par input se focus hata do (blur kar do) */
+uiElements.userProfileName.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        uiElements.userProfileName.blur(); 
+    }
+});
+
+
+/* ==========================================
+   4. SPA ROUTING (View Controller)
+   ========================================== */
+
+/* Ye function classes ko toggle karke Landing Page aur Dashboard ke 
+  beech me smooth transition handle karta hai bina page refresh kiye.
+*/
+const toggleApplicationView = (isOpeningDashboard) => {
+    uiElements.marketingSiteWrapper.classList.toggle('hiddenView', isOpeningDashboard);
+    uiElements.dashboardWrapper.classList.toggle('hiddenView', !isOpeningDashboard);
+    
+    if (isOpeningDashboard) {
+        updateDynamicGreetingAndDate();
+    }
 };
 
 
 /* ==========================================
-   6. EVENT LISTENERS & FEATURES
+   5. CORE FINANCIAL MATH & DOM UPDATES (The Engine)
    ========================================== */
-$('buttonLaunchDashboard').addEventListener('click', () => toggleView(true));
-$('navLaunchDashboard').addEventListener('click', () => toggleView(true));
-$('buttonCloseDashboard').addEventListener('click', () => toggleView(false));
 
-UI.salary.addEventListener('input', saveState);
-UI.budget.addEventListener('input', () => { updateMetrics(); saveState(); });
-
-UI.search.addEventListener('input', (e) => renderLedger(e.target.value));
-
-$('btnQuickSalary').addEventListener('click', () => {
-    const salaryAmt = parseFloat(UI.salary.value);
-    if (!salaryAmt || isNaN(salaryAmt)) return alert("Please enter a Base Salary in the sidebar first.");
+const calculateAndUpdateFinancialMetrics = () => {
+    const targetBudget = parseFloat(uiElements.inputMonthlyBudget.value) || 0;
     
-    txns.push({ id: Date.now(), desc: 'Monthly Salary', amt: salaryAmt, cat: 'Salary' });
-    saveState(); updateMetrics(); renderLedger();
+    /* Array filter aur reduce methods ka use karke maths kar rahe hain.
+      Sirf positive amounts ko filter karke unka total income nikal rahe hain.
+    */
+    const totalIncomeCalculated = globalTransactionHistoryArray
+        .filter(transactionItem => transactionItem.transactionAmount > 0)
+        .reduce((accumulator, currentValue) => accumulator + currentValue.transactionAmount, 0);
+        
+    /* Sirf negative amounts ko filter karke unka total expense nikal rahe hain. */
+    const totalExpenseCalculated = globalTransactionHistoryArray
+        .filter(transactionItem => transactionItem.transactionAmount < 0)
+        .reduce((accumulator, currentValue) => accumulator + currentValue.transactionAmount, 0);
+        
+    const masterBalanceCalculated = totalIncomeCalculated + totalExpenseCalculated; 
+
+    // Calculated amounts ko currency format me badal kar HTML me inject karna
+    uiElements.displayTotalIncome.innerText = `+${formatIndianRupee(totalIncomeCalculated).replace('₹', '₹ ')}`;
+    uiElements.displayTotalExpense.innerText = `-${formatIndianRupee(Math.abs(totalExpenseCalculated)).replace('₹', '₹ ')}`;
+    uiElements.displayMasterBalance.innerText = formatIndianRupee(masterBalanceCalculated).replace('₹', '₹ ');
+    
+    // Remaining Budget Math
+    const remainingBudgetCalculated = targetBudget - Math.abs(totalExpenseCalculated);
+    uiElements.displayRemainingBudget.innerText = formatIndianRupee(remainingBudgetCalculated).replace('₹', '₹ ');
+    
+    // Agar budget minus me gaya toh text red kar do
+    if (remainingBudgetCalculated < 0) {
+        uiElements.displayRemainingBudget.style.color = 'var(--color-expense)';
+    } else {
+        uiElements.displayRemainingBudget.style.color = 'var(--color-text-primary)';
+    }
+
+    // Visual Analytics Bar Fill Logic
+    if (totalIncomeCalculated > 0) {
+        let expenseRatioPercentage = Math.min((Math.abs(totalExpenseCalculated) / totalIncomeCalculated) * 100, 100);
+        
+        uiElements.expenseVisualBar.style.width = `${expenseRatioPercentage}%`;
+        uiElements.expenseRatioText.innerText = `${expenseRatioPercentage.toFixed(1)}% of Income Spent`;
+        
+        // Agar 80% se zyada spend kar diya toh bar ko red kar do alert karne ke liye
+        if (expenseRatioPercentage > 80) {
+            uiElements.expenseVisualBar.style.background = 'var(--color-expense)';
+        } else {
+            uiElements.expenseVisualBar.style.background = '#F59E0B'; // Orange/Yellow
+        }
+    } else {
+        uiElements.expenseVisualBar.style.width = `0%`;
+        uiElements.expenseRatioText.innerText = `0%`;
+    }
+};
+
+const getCategoryEmojiIcon = (categoryString) => {
+    // Ye dictionary map karti hai text category ko ek visual emoji icon se
+    const categoryIconsMap = { 
+        'Food': '🍔', 'Transport': '🚗', 'Utilities': '⚡', 
+        'Shopping': '🛍️', 'Salary': '💰', 'Freelance': '💻', 
+        'Investments': '📈', 'Refund': '🔄', 'Other': '📌' 
+    };
+    return categoryIconsMap[categoryString] || '📌';
+};
+
+const renderTransactionLedgerToDOM = (searchFilterText = '') => {
+    // Naya data draw karne se pehle purana list clear karna zaroori hai
+    uiElements.transactionLedgerList.innerHTML = ''; 
+    
+    // Agar search bar me kuch likha hai toh array ko filter karo
+    const filteredTransactionsArray = globalTransactionHistoryArray.filter(transactionItem => 
+        transactionItem.transactionDescription.toLowerCase().includes(searchFilterText.toLowerCase()) || 
+        transactionItem.transactionCategory.toLowerCase().includes(searchFilterText.toLowerCase())
+    );
+
+    // .sort() newest transactions ko pehle dikhata hai
+    filteredTransactionsArray.sort((a, b) => b.transactionId - a.transactionId).forEach(transactionItem => {
+        
+        const listItemElement = document.createElement('li');
+        
+        // Agar amount > 0 hai toh green class do, warna red class
+        if (transactionItem.transactionAmount > 0) {
+            listItemElement.className = `ledgerItem incomeItem`;
+        } else {
+            listItemElement.className = `ledgerItem expenseItem`;
+        }
+        
+        const formattedTime = new Date(transactionItem.transactionId).toLocaleTimeString('en-IN', { 
+            hour: '2-digit', 
+            minute: '2-digit' 
+        });
+        
+        const signString = transactionItem.transactionAmount > 0 ? '+' : '-';
+        const absoluteAmountFormatted = formatIndianRupee(Math.abs(transactionItem.transactionAmount));
+        
+        // HTML structure build karke list me inject kar rahe hain
+        listItemElement.innerHTML = `
+            <div class="catIcon">${getCategoryEmojiIcon(transactionItem.transactionCategory)}</div>
+            <div class="ledgerItemDetails">
+                <span class="ledgerItemDesc">${transactionItem.transactionDescription}</span>
+                <span class="ledgerItemDate">${transactionItem.transactionCategory} • ${formattedTime}</span>
+            </div>
+            <span class="ledgerItemValue">${signString}${absoluteAmountFormatted}</span>
+            <button class="deleteBtn" onclick="deleteTransactionEntryById(${transactionItem.transactionId})">🗑️</button>
+        `;
+        
+        uiElements.transactionLedgerList.appendChild(listItemElement);
+    });
+};
+
+/* Ye function global window object par hai taaki HTML ka 'onclick' event isko dhoond sake */
+window.deleteTransactionEntryById = (idToDelete) => {
+    // Us ID ko array se hata do
+    globalTransactionHistoryArray = globalTransactionHistoryArray.filter(transactionItem => transactionItem.transactionId !== idToDelete);
+    
+    saveApplicationStateToLocalStorage();
+    calculateAndUpdateFinancialMetrics();
+    renderTransactionLedgerToDOM(uiElements.searchTransactions.value);
+};
+
+
+/* ==========================================
+   6. EVENT LISTENERS & FEATURES (Interactivity)
+   ========================================== */
+
+getDOMElement('buttonLaunchDashboard').addEventListener('click', () => { toggleApplicationView(true); });
+getDOMElement('navLaunchDashboard').addEventListener('click', () => { toggleApplicationView(true); });
+getDOMElement('buttonCloseDashboard').addEventListener('click', () => { toggleApplicationView(false); });
+
+// Settings inputs change hone par instantly save aur calculate karna
+uiElements.inputBaseSalary.addEventListener('input', () => { saveApplicationStateToLocalStorage(); });
+uiElements.inputMonthlyBudget.addEventListener('input', () => { 
+    calculateAndUpdateFinancialMetrics(); 
+    saveApplicationStateToLocalStorage(); 
 });
 
-$('btnClearData').addEventListener('click', () => {
-    if (!confirm("Wipe all data? This cannot be undone.")) return;
+// Search bar me type karte hi live filtering
+uiElements.searchTransactions.addEventListener('input', (event) => { 
+    renderTransactionLedgerToDOM(event.target.value); 
+});
+
+// Quick Add Salary Button Logic
+getDOMElement('btnQuickSalary').addEventListener('click', () => {
+    const salaryAmountNumber = parseFloat(uiElements.inputBaseSalary.value);
+    
+    if (!salaryAmountNumber || isNaN(salaryAmountNumber)) {
+        return alert("Please enter a Base Salary in the sidebar first.");
+    }
+    
+    // Direct array me salary transaction push kar rahe hain
+    globalTransactionHistoryArray.push({ 
+        transactionId: Date.now(), 
+        transactionDescription: 'Monthly Salary', 
+        transactionAmount: salaryAmountNumber, 
+        transactionCategory: 'Salary' 
+    });
+    
+    saveApplicationStateToLocalStorage(); 
+    calculateAndUpdateFinancialMetrics(); 
+    renderTransactionLedgerToDOM();
+});
+
+// Danger Zone: Wipe All Data Logic
+getDOMElement('btnClearData').addEventListener('click', () => {
+    const userConfirmed = confirm("Wipe all data? This cannot be undone.");
+    if (!userConfirmed) return; // Agar user cancel kare toh wapas laut jao
+    
     localStorage.removeItem('trackerPro_txns');
     localStorage.removeItem('trackerPro_salary');
     localStorage.removeItem('trackerPro_budget');
-    txns = []; UI.salary.value = ''; UI.budget.value = ''; UI.search.value = '';
-    updateMetrics(); renderLedger();
+    
+    globalTransactionHistoryArray = []; 
+    uiElements.inputBaseSalary.value = ''; 
+    uiElements.inputMonthlyBudget.value = ''; 
+    uiElements.searchTransactions.value = '';
+    
+    calculateAndUpdateFinancialMetrics(); 
+    renderTransactionLedgerToDOM();
 });
 
-UI.form.addEventListener('submit', (e) => {
-    e.preventDefault();
+// Main Form Submission Logic
+uiElements.financialEntryForm.addEventListener('submit', (event) => {
+    event.preventDefault(); // Page reload rokne ke liye
     
-    const desc = UI.desc.value.trim();
-    const rawAmt = Math.abs(parseFloat(UI.amt.value.trim()));
+    const inputDescriptionText = uiElements.inputTransactionDesc.value.trim();
+    // Math.abs se ensure karte hain ki user negative number type na kar paye
+    const rawInputAmount = Math.abs(parseFloat(uiElements.inputTransactionAmt.value.trim()));
     
-    // NAYA LOGIC: Read from the correct dropdown based on the active CSS Radio State
-    const selectedType = document.querySelector('input[name="transactionType"]:checked').value;
-    const cat = selectedType === 'expense' ? $('inputCategoryExpense').value : $('inputCategoryIncome').value;
+    // CSS Radio Button se pata lagate hain ki Expense selected hai ya Income
+    const selectedTransactionType = document.querySelector('input[name="transactionType"]:checked').value;
+    
+    // Agar Expense hai toh Expense wala dropdown read karo, warna Income wala dropdown
+    let selectedCategory = '';
+    if (selectedTransactionType === 'expense') {
+        selectedCategory = getDOMElement('inputCategoryExpense').value;
+    } else {
+        selectedCategory = getDOMElement('inputCategoryIncome').value;
+    }
 
-    if (!desc || isNaN(rawAmt)) return alert("Please provide a valid description and amount.");
+    // Validation: Check agar kuch khali chhut gaya ho
+    if (!inputDescriptionText || isNaN(rawInputAmount)) {
+        return alert("Please provide a valid description and amount.");
+    }
 
-    const finalAmount = selectedType === 'expense' ? -rawAmt : rawAmt;
+    // Agar Expense hai toh amount ko negative kar do, warna positive rehne do
+    let calculatedFinalAmount = 0;
+    if (selectedTransactionType === 'expense') {
+        calculatedFinalAmount = -rawInputAmount;
+    } else {
+        calculatedFinalAmount = rawInputAmount;
+    }
 
-    txns.push({ id: Date.now(), desc, amt: finalAmount, cat });
+    // Naya object banakar history array me daal do
+    globalTransactionHistoryArray.push({ 
+        transactionId: Date.now(), // Unique ID time ke basis par
+        transactionDescription: inputDescriptionText, 
+        transactionAmount: calculatedFinalAmount, 
+        transactionCategory: selectedCategory 
+    });
 
-    saveState();
-    updateMetrics();
-    renderLedger(UI.search.value); 
+    saveApplicationStateToLocalStorage();
+    calculateAndUpdateFinancialMetrics();
+    renderTransactionLedgerToDOM(uiElements.searchTransactions.value); 
 
-    UI.form.reset();
-    UI.desc.focus();
+    // Entry ke baad form saaf karke description field par wapas focus set karna
+    uiElements.financialEntryForm.reset();
+    uiElements.inputTransactionDesc.focus();
 });
+
 
 /* ==========================================
-   7. BOOTSTRAP
+   7. BOOTSTRAP (Start Engine on Page Load)
    ========================================== */
-updateMetrics();
-renderLedger();
+   
+calculateAndUpdateFinancialMetrics();
+renderTransactionLedgerToDOM();
